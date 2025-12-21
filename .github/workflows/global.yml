@@ -1,0 +1,47 @@
+name: Global IPTV Update
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run-global-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Global Script
+        run: python global.py
+
+      - name: Commit Changes
+        run: |
+          git add DeaTHLesS-Bot-iptv.m3u
+          git commit -m "Auto-update IPTV playlist" || echo "No changes to commit"
+
+      - name: Pull and Push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git pull origin main --rebase
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} main
