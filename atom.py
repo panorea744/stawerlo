@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
 }
-# Dosya adını isteğine göre güncelledim
+
 OUTPUT_FILENAME = "atom.m3u"
 STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
 
@@ -65,7 +65,8 @@ def get_atom_content():
                 if m3u8_match:
                     link = m3u8_match.group(1).replace('\\', '')
                     if link.endswith('.m3u8'):
-                        entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Atom-Panel", {name}\n#EXTVLCOPT:http-referrer={base_domain}\n{link}'
+                        # BURASI DÜZELTİLDİ: EXTVLCOPT kısmı kaldırıldı
+                        entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Atom-Panel", {name}\n{link}'
                         results.append(entry)
                         print(f"Bulundu: {name}")
         except:
@@ -79,11 +80,9 @@ def main():
     
     all_content = ["#EXTM3U"]
     
-    # Sadece Atom fonksiyonunu çağırıyoruz
     atom_lines = get_atom_content()
     all_content.extend(atom_lines)
     
-    # Dosyaya yazma işlemi
     try:
         with open(OUTPUT_FILENAME, "w", encoding="utf-8") as f:
             f.write("\n".join(all_content))
