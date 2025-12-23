@@ -1,0 +1,50 @@
+name: RecTV Arşiv Güncelleyici
+
+on:
+  schedule:
+    # UTC saatiyle 03:00 (Türkiye saatiyle sabah 06:00'da çalışır)
+    - cron: '0 3 * * *'
+  workflow_dispatch: # İstediğin zaman "Run workflow" butonuna basıp elle çalıştırman için
+
+jobs:
+  update-m3u:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Repoya dosya yükleyebilmesi için yazma izni
+
+    # GitHub Free hesaplarda maksimum sınır 360 dakikadır (6 Saat).
+    # İşlem 355. dakikada bitmezse otomatik durdurulur.
+    timeout-minutes: 355 
+
+    steps:
+    - name: Repoyu Çek (Checkout)
+      uses: actions/checkout@v4
+
+    - name: Python Kurulumu
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10' 
+
+    - name: Gerekli Kütüphaneleri Yükle
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests urllib3
+
+    - name: Scripti Çalıştır
+      run: |
+        # Python dosyanın adı neyse buraya onu yaz. Örn: main.py
+        python reko.py
+
+    - name: Dosyayı GitHub'a Yükle (Commit & Push)
+      run: |
+        git config --global user.name "Otomatik Bot"
+        git config --global user.email "bot@github.com"
+        
+        # Oluşan M3U dosyasını ekle
+        git add RecTV_MEGA_ARSIV.m3u
+        
+        # Değişiklik varsa commit et, yoksa hata verme
+        git commit -m "Günlük Otomatik Güncelleme: $(date +'%Y-%m-%d')" || echo "Değişiklik yok."
+        
+        # Dosyayı repoya gönder
+        git push
