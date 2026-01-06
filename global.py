@@ -202,7 +202,7 @@ def get_trgoals_content():
     base = "https://trgoals"
     domain = ""
 
-    for i in range(1485, 2101):
+    for i in range(1495, 2101):
         test = f"{base}{i}.xyz"
         try:
             r = requests.head(test, timeout=2)
