@@ -4,12 +4,13 @@ import urllib3
 import warnings
 import os
 
-# --- CONFIGURATION ---
+# --- AYARLAR ---
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore')
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 }
 TIMEOUT_VAL = 15
 PROXY_URL = "https://seep.eu.org/"
@@ -43,7 +44,7 @@ SELCUK_NAMES = {
 }
 
 def get_selcuk_content():
-    print("--- 📡 Scanning Selcuk Sports ---")
+    print("--- 📡 Selçuk Sports Taranıyor ---")
     results = []
     
     def get_html_proxy(url):
@@ -67,7 +68,7 @@ def get_selcuk_content():
     html = get_html_proxy(start_url)
     
     if not html:
-        print("❌ Selcuk: Main page unreachable.")
+        print("❌ Selcuk: Ana sayfaya ulaşılamadı.")
         return results
 
     active_domain = ""
@@ -78,7 +79,7 @@ def get_selcuk_content():
             active_domain = link_match.group(1).strip().rstrip('/')
 
     if not active_domain:
-        print("❌ Selcuk: Active domain not found.")
+        print("❌ Selcuk: Aktif domain bulunamadı.")
         return results
 
     print(f"✅ Selcuk Domain: {active_domain}")
@@ -120,7 +121,7 @@ def get_selcuk_content():
             entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selçuk-Panel", {name}\n{link}'
             results.append(entry)
     else:
-        print("❌ Selcuk: Stream URL not found.")
+        print("❌ Selcuk: Stream URL bulunamadı.")
 
     return results
 
@@ -135,7 +136,7 @@ ATOM_CHANNELS = [
 ]
 
 def get_atom_content():
-    print("--- 📡 Scanning Atom Spor ---")
+    print("--- 📡 Atom Spor Taranıyor ---")
     results = []
     start_url = "https://url24.link/AtomSporTV"
     
@@ -181,62 +182,114 @@ def get_atom_content():
             
     return results
 
-# --- 3. TRGOALS LOGIC ---
+# --- 3. TRGOALS LOGIC (GÜNCELLENMİŞ VERSİYON) ---
 TRGOALS_IDS = {
-    "yayinzirve":"beIN Sports 1","yayininat":"beIN Sports 1","yayin1":"beIN Sports 1",
-    "yayinb2":"beIN Sports 2","yayinb3":"beIN Sports 3","yayinb4":"beIN Sports 4",
-    "yayinb5":"beIN Sports 5","yayinbm1":"beIN Sports Max 1","yayinbm2":"beIN Sports Max 2",
-    "yayinss":"S Sport 1","yayinss2":"S Sport 2","yayint1":"Tivibu Spor 1",
-    "yayint2":"Tivibu Spor 2","yayint3":"Tivibu Spor 3","yayint4":"Tivibu Spor 4",
-    "yayinsmarts":"Smart Spor 1","yayinsms2":"Smart Spor 2","yayintrtspor":"TRT Spor",
-    "yayintrtspor2":"TRT Spor 2","yayinas":"A Spor","yayinatv":"ATV",
-    "yayintv8":"TV8","yayintv85":"TV8.5","yayinnbatv":"NBA TV",
-    "yayinex1":"Tabii 1","yayinex2":"Tabii 2","yayinex3":"Tabii 3",
-    "yayinex4":"Tabii 4","yayinex5":"Tabii 5","yayinex6":"Tabii 6",
-    "yayinex7":"Tabii 7","yayinex8":"Tabii 8"
+    # BeIN Sports
+    "yayinzirve": "beIN Sports 1",
+    "yayinb2": "beIN Sports 2",
+    "yayinb3": "beIN Sports 3",
+    "yayinb4": "beIN Sports 4",
+    "yayinb5": "beIN Sports 5",
+    "yayinbm1": "beIN Sports Max 1",
+    "yayinbm2": "beIN Sports Max 2",
+    # S Sport
+    "yayinss": "S Sport 1",
+    "yayinss2": "S Sport 2",
+    "yayinssplus": "S Sport Plus 1",
+    "yayinssplus2": "S Sport Plus 2",
+    # Tivibu
+    "yayint1": "Tivibu Spor 1",
+    "yayint2": "Tivibu Spor 2",
+    "yayint3": "Tivibu Spor 3",
+    "yayint4": "Tivibu Spor 4",
+    # Smart Spor
+    "yayinsmarts": "Smart Spor 1",
+    "yayinsms2": "Smart Spor 2",
+    # TRT & Ulusal
+    "yayintrtspor": "TRT Spor",
+    "yayintrtspor2": "TRT Spor 2",
+    "yayinas": "A Spor",
+    "yayinatv": "ATV",
+    "yayintv8": "TV8",
+    "yayintv85": "TV8.5",
+    "yayinnbatv": "NBA TV",
+    # Exxen (Avrupa Maçları)
+    "yayinex1": "Exxen Spor 1",
+    "yayinex2": "Exxen Spor 2",
+    "yayinex3": "Exxen Spor 3",
+    "yayinex4": "Exxen Spor 4",
+    "yayinex5": "Exxen Spor 5",
+    "yayinex6": "Exxen Spor 6",
+    "yayinex7": "Exxen Spor 7",
+    "yayinex8": "Exxen Spor 8",
+    # Tabii (Konferans Ligi)
+    "yayintabii1": "Tabii Spor 1",
+    "yayintabii2": "Tabii Spor 2",
+    "yayintabii3": "Tabii Spor 3",
+    "yayintabii4": "Tabii Spor 4",
+    "yayintabii5": "Tabii Spor 5"
 }
 
 def get_trgoals_content():
-    print("--- 📡 Scanning TRGoals ---")
+    print("--- 📡 TRGoals Taranıyor (Gelişmiş Mod) ---")
     results = []
-    base = "https://trgoals"
+    base_pattern = "https://trgoals"
     domain = ""
 
+    # 1. Adım: Aktif Domaini Bul (Hızlı Tarama)
+    print("🔍 Aktif TRGoals domaini aranıyor...")
     for i in range(1495, 2101):
-        test = f"{base}{i}.xyz"
+        test = f"{base_pattern}{i}.xyz"
         try:
-            r = requests.head(test, timeout=2)
+            # SSL doğrulama kapalı ve kısa timeout ile kontrol et
+            r = requests.get(test, headers=HEADERS, timeout=1.5, verify=False)
             if r.status_code == 200:
                 domain = test
-                print(f"✅ TRGoals Domain: {domain}")
+                print(f"✅ TRGoals Domain Bulundu: {domain}")
                 break
         except:
             continue
             
     if not domain:
-        print("❌ TRGoals: No domain found.")
+        print("❌ TRGoals: Aktif domain bulunamadı.")
         return results
 
+    # 2. Adım: Kanalları Çek (View-Source Mantığı)
+    print("⏳ Kanallar çözümleniyor...")
     for cid, name in TRGOALS_IDS.items():
         try:
+            # Sayfaya Referer ile git
             url = f"{domain}/channel.html?id={cid}"
-            r = requests.get(url, headers=HEADERS, timeout=5)
-            match = re.search(r'const baseurl = "(.*?)"', r.text)
+            
+            # Referer header'ı ekle (Domain sonuna / koyarak)
+            temp_headers = HEADERS.copy()
+            temp_headers["Referer"] = domain + "/"
+            
+            r = requests.get(url, headers=temp_headers, timeout=5, verify=False)
+            
+            # Regex ile BASE_URL'i avla (Büyük/Küçük harf duyarsız)
+            # Hem çift tırnak (") hem tek tırnak (') destekler
+            match = re.search(r'const\s+BASE_URL\s*=\s*["\'](.*?)["\']', r.text, re.IGNORECASE)
+            
             if match:
                 baseurl = match.group(1)
                 full_url = f"{baseurl}{cid}.m3u8"
+                # M3U formatına Referer bilgisini de gömüyoruz
                 entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={domain}/\n{full_url}'
                 results.append(entry)
+            else:
+                # Bazı kanallar o an yayında olmayabilir, sessizce geç
+                pass
         except:
             continue
+            
     return results
 
 # --- 4. ANDRO PANEL (STATIC) ---
 def get_andro_content():
-    print("--- 📡 Processing Andro Panel ---")
+    print("--- 📡 Andro Panel İşleniyor ---")
     results = []
     
-    # Raw data mapped to proper names for standardization
     andro_data = [
         ("TR:beIN Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebiraz1.m3u8"),
         ("TR:beIN Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebs1.m3u8"),
@@ -285,7 +338,7 @@ def get_andro_content():
 
 # --- MAIN EXECUTION ---
 def main():
-    print("🚀 Starting Multi-Source IPTV Generator...")
+    print("🚀 Çok Kaynaklı IPTV Oluşturucu Başlatılıyor...")
     
     all_content = ["#EXTM3U"]
     
@@ -297,7 +350,7 @@ def main():
     atom_lines = get_atom_content()
     all_content.extend(atom_lines)
     
-    # 3. Get TRGoals
+    # 3. Get TRGoals (Updated)
     trgoals_lines = get_trgoals_content()
     all_content.extend(trgoals_lines)
     
@@ -313,13 +366,13 @@ def main():
         full_path = os.path.abspath(OUTPUT_FILENAME)
         total_channels = len(all_content) - 1
         
-        print(f"\n✅ SUCCESS: All sources merged!")
-        print(f"💾 File: {OUTPUT_FILENAME}")
-        print(f"📝 Total Channels: {total_channels}")
-        print(f"📍 Path: {full_path}")
+        print(f"\n✅ İŞLEM BAŞARILI: Tüm kaynaklar birleştirildi!")
+        print(f"💾 Dosya: {OUTPUT_FILENAME}")
+        print(f"📝 Toplam Kanal: {total_channels}")
+        print(f"📍 Yol: {full_path}")
         
     except IOError as e:
-        print(f"\n❌ File write error: {e}")
+        print(f"\n❌ Dosya yazma hatası: {e}")
 
 if __name__ == "__main__":
     main()
