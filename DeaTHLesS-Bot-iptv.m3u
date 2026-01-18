@@ -115,6 +115,9 @@ https://si5.d72577a9dd0ec9.sbs/yayint2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tivibu Spor 3
 #EXTVLCOPT:http-referer=https://trgoals1495.xyz/
 https://si5.d72577a9dd0ec9.sbs/yayint3.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tivibu Spor 4
+#EXTVLCOPT:http-referer=https://trgoals1495.xyz/
+https://si5.d72577a9dd0ec9.sbs/yayint4.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Smart Spor 1
 #EXTVLCOPT:http-referer=https://trgoals1495.xyz/
 https://si5.d72577a9dd0ec9.sbs/yayinsmarts.m3u8
