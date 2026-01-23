@@ -3,6 +3,7 @@ import re
 import urllib3
 import warnings
 import os
+from bs4 import BeautifulSoup
 
 # --- AYARLAR ---
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -17,7 +18,7 @@ PROXY_URL = "https://seep.eu.org/"
 OUTPUT_FILENAME = "DeaTHLesS-Bot-iptv.m3u"
 STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
 
-# --- 1. SELCUK SPORTS LOGIC ---
+# --- 1. SELCUK SPORTS LOGIC (GÜNCELLENMİŞ REFERRER İLE) ---
 SELCUK_NAMES = {
     "selcukbeinsports1": "beIN Sports 1",
     "selcukbeinsports2": "beIN Sports 2",
@@ -43,6 +44,8 @@ SELCUK_NAMES = {
     "selcuktabiispor5": "Tabii Spor 5"
 }
 
+SELCUK_REFERRER = "https://selcuksportshd1903.xyz"
+
 def get_selcuk_content():
     print("--- 📡 Selçuk Sports Taranıyor ---")
     results = []
@@ -56,9 +59,12 @@ def get_selcuk_content():
         except:
             return None
 
-    def get_html_direct(url):
+    def get_html_direct(url, referer=None):
         try:
-            r = requests.get(url, headers=HEADERS, timeout=TIMEOUT_VAL, verify=False)
+            headers = HEADERS.copy()
+            if referer:
+                headers["Referer"] = referer
+            r = requests.get(url, headers=headers, timeout=TIMEOUT_VAL, verify=False)
             r.raise_for_status()
             return r.text
         except:
@@ -118,7 +124,7 @@ def get_selcuk_content():
         
         for cid, name in SELCUK_NAMES.items():
             link = f"{base_stream_url}{cid}/playlist.m3u8"
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selçuk-Panel", {name}\n{link}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selçuk-Panel", {name}\n#EXTVLCOPT:http-referrer={SELCUK_REFERRER}\n{link}'
             results.append(entry)
     else:
         print("❌ Selcuk: Stream URL bulunamadı.")
@@ -182,10 +188,12 @@ def get_atom_content():
             
     return results
 
-# --- 3. TRGOALS LOGIC (GÜNCELLENMİŞ VERSİYON) ---
+# --- 3. TRGOALS LOGIC (GÜNCELLENMİŞ VERSİYON - VIEW-SOURCE İLE) ---
 TRGOALS_IDS = {
     # BeIN Sports
     "yayinzirve": "beIN Sports 1",
+    "yayin1": "beIN Sports 1",
+    "yayininat": "beIN Sports 1",
     "yayinb2": "beIN Sports 2",
     "yayinb3": "beIN Sports 3",
     "yayinb4": "beIN Sports 4",
@@ -236,13 +244,12 @@ def get_trgoals_content():
     base_pattern = "https://trgoals"
     domain = ""
 
-    # 1. Adım: Aktif Domaini Bul (Hızlı Tarama)
+    # 1. Adım: Aktif Domaini Bul
     print("🔍 Aktif TRGoals domaini aranıyor...")
     for i in range(1509, 2101):
         test = f"{base_pattern}{i}.xyz"
         try:
-            # SSL doğrulama kapalı ve kısa timeout ile kontrol et
-            r = requests.get(test, headers=HEADERS, timeout=1.5, verify=False)
+            r = requests.get(test, headers=HEADERS, timeout=2, verify=False)
             if r.status_code == 200:
                 domain = test
                 print(f"✅ TRGoals Domain Bulundu: {domain}")
@@ -254,109 +261,236 @@ def get_trgoals_content():
         print("❌ TRGoals: Aktif domain bulunamadı.")
         return results
 
-    # 2. Adım: Kanalları Çek (View-Source Mantığı)
+    # 2. Adım: VIEW-SOURCE Mantığı ile Kanalları Çek
     print("⏳ Kanallar çözümleniyor...")
+    
+    # Aktif domain için referer hazırla
+    referer_url = domain + "/"
+    
     for cid, name in TRGOALS_IDS.items():
         try:
-            # Sayfaya Referer ile git
+            # VIEW-SOURCE gibi sayfa kaynağını al
             url = f"{domain}/channel.html?id={cid}"
             
-            # Referer header'ı ekle (Domain sonuna / koyarak)
+            # Referer ile sayfa kaynağını al
             temp_headers = HEADERS.copy()
-            temp_headers["Referer"] = domain + "/"
+            temp_headers["Referer"] = referer_url
             
             r = requests.get(url, headers=temp_headers, timeout=5, verify=False)
             
-            # Regex ile BASE_URL'i avla (Büyük/Küçük harf duyarsız)
-            # Hem çift tırnak (") hem tek tırnak (') destekler
-            match = re.search(r'const\s+BASE_URL\s*=\s*["\'](.*?)["\']', r.text, re.IGNORECASE)
+            # VIEW-SOURCE içinde CONFIG'deki baseUrl'i ara
+            # Pattern: CONFIG={baseUrl: "URL"}
+            # Pattern: baseUrl: "URL"
+            # Pattern: const BASE_URL = "URL"
             
-            if match:
-                baseurl = match.group(1)
-                full_url = f"{baseurl}{cid}.m3u8"
-                # M3U formatına Referer bilgisini de gömüyoruz
-                entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={domain}/\n{full_url}'
+            patterns = [
+                r'CONFIG\s*=\s*{[^}]*baseUrl\s*:\s*["\'](.*?)["\']',
+                r'baseUrl\s*:\s*["\'](.*?)["\']',
+                r'const\s+BASE_URL\s*=\s*["\'](.*?)["\']',
+                r'let\s+baseUrl\s*=\s*["\'](.*?)["\']',
+                r'var\s+baseUrl\s*=\s*["\'](.*?)["\']'
+            ]
+            
+            baseurl = ""
+            for pattern in patterns:
+                match = re.search(pattern, r.text, re.IGNORECASE)
+                if match:
+                    baseurl = match.group(1)
+                    break
+            
+            if baseurl:
+                # baseUrl temizleme
+                baseurl = baseurl.rstrip('/')
+                if not baseurl.endswith('.m3u8'):
+                    full_url = f"{baseurl}/{cid}.m3u8"
+                else:
+                    full_url = baseurl.replace('.m3u8', f'/{cid}.m3u8')
+                
+                # Referer bilgisini ekle
+                entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={referer_url}\n{full_url}'
                 results.append(entry)
+                print(f"✓ {name}: {cid} başarılı")
             else:
-                # Bazı kanallar o an yayında olmayabilir, sessizce geç
-                pass
-        except:
+                # DEBUG: Eğer baseUrl bulunamazsa, sayfanın bir kısmını göster
+                if "CONFIG" in r.text or "baseUrl" in r.text:
+                    print(f"⚠ {name}: baseUrl bulundu ancak parse edilemedi")
+                    
+        except Exception as e:
+            # Hata durumunda sessizce geç
             continue
             
+    print(f"✅ TRGoals: {len(results)} kanal bulundu.")
     return results
 
-# --- 4. ANDRO PANEL (STATIC) ---
+# --- 4. ANDRO PANEL (GÜNCELLENMİŞ VERSİYON) ---
 def get_andro_content():
-    print("--- 📡 Andro Panel İşleniyor ---")
+    print("--- 📡 Andro Panel Taranıyor ---")
     results = []
     
-    andro_data = [
-        ("TR:beIN Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebiraz1.m3u8"),
-        ("TR:beIN Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebs1.m3u8"),
-        ("TR:beIN Sport 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebs2.m3u8"),
-        ("TR:beIN Sport 3 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebs3.m3u8"),
-        ("TR:beIN Sport 4 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebs4.m3u8"),
-        ("TR:beIN Sport 5 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebs5.m3u8"),
-        ("TR:beIN Sport Max 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebsm1.m3u8"),
-        ("TR:beIN Sport Max 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivebsm2.m3u8"),
-        ("TR:S Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivess1.m3u8"),
-        ("TR:S Sport 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivess2.m3u8"),
-        ("TR:Tivibu Sport HD", "https://bot-sport.aykara463.workers.dev/androstreamlivets.m3u8"),
-        ("TR:Tivibu Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivets1.m3u8"),
-        ("TR:Tivibu Sport 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivets2.m3u8"),
-        ("TR:Tivibu Sport 3 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivets3.m3u8"),
-        ("TR:Tivibu Sport 4 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivets4.m3u8"),
-        ("TR:Smart Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivesm1.m3u8"),
-        ("TR:Smart Sport 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivesm2.m3u8"),
-        ("TR:Euro Sport 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivees1.m3u8"),
-        ("TR:Euro Sport 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivees2.m3u8"),
-        ("TR:Tabii HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb.m3u8"),
-        ("TR:Tabii 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb1.m3u8"),
-        ("TR:Tabii 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb2.m3u8"),
-        ("TR:Tabii 3 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb3.m3u8"),
-        ("TR:Tabii 4 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb4.m3u8"),
-        ("TR:Tabii 5 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb5.m3u8"),
-        ("TR:Tabii 6 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb6.m3u8"),
-        ("TR:Tabii 7 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb7.m3u8"),
-        ("TR:Tabii 8 HD", "https://bot-sport.aykara463.workers.dev/androstreamlivetb8.m3u8"),
-        ("TR:Exxen HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn.m3u8"),
-        ("TR:Exxen 1 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn1.m3u8"),
-        ("TR:Exxen 2 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn2.m3u8"),
-        ("TR:Exxen 3 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn3.m3u8"),
-        ("TR:Exxen 4 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn4.m3u8"),
-        ("TR:Exxen 5 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn5.m3u8"),
-        ("TR:Exxen 6 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn6.m3u8"),
-        ("TR:Exxen 7 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn7.m3u8"),
-        ("TR:Exxen 8 HD", "https://bot-sport.aykara463.workers.dev/androstreamliveexn8.m3u8")
-    ]
+    PROXY = "https://proxy.freecdn.workers.dev/?url="
+    START = "https://taraftariumizle.org"
     
-    for name, url in andro_data:
-        entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Andro-Panel", {name}\n{url}'
-        results.append(entry)
+    headers = HEADERS.copy()
+    
+    channels = [
+        ("androstreamlivebiraz1", 'TR:beIN Sport 1 HD'),
+        ("androstreamlivebs1", 'TR:beIN Sport 1 HD'),
+        ("androstreamlivebs2", 'TR:beIN Sport 2 HD'),
+        ("androstreamlivebs3", 'TR:beIN Sport 3 HD'),
+        ("androstreamlivebs4", 'TR:beIN Sport 4 HD'),
+        ("androstreamlivebs5", 'TR:beIN Sport 5 HD'),
+        ("androstreamlivebsm1", 'TR:beIN Sport Max 1 HD'),
+        ("androstreamlivebsm2", 'TR:beIN Sport Max 2 HD'),
+        ("androstreamlivess1", 'TR:S Sport 1 HD'),
+        ("androstreamlivess2", 'TR:S Sport 2 HD'),
+        ("androstreamlivets", 'TR:Tivibu Sport HD'),
+        ("androstreamlivets1", 'TR:Tivibu Sport 1 HD'),
+        ("androstreamlivets2", 'TR:Tivibu Sport 2 HD'),
+        ("androstreamlivets3", 'TR:Tivibu Sport 3 HD'),
+        ("androstreamlivets4", 'TR:Tivibu Sport 4 HD'),
+        ("androstreamlivesm1", 'TR:Smart Sport 1 HD'),
+        ("androstreamlivesm2", 'TR:Smart Sport 2 HD'),
+        ("androstreamlivees1", 'TR:Euro Sport 1 HD'),
+        ("androstreamlivees2", 'TR:Euro Sport 2 HD'),
+        ("androstreamlivetb", 'TR:Tabii HD'),
+        ("androstreamlivetb1", 'TR:Tabii 1 HD'),
+        ("androstreamlivetb2", 'TR:Tabii 2 HD'),
+        ("androstreamlivetb3", 'TR:Tabii 3 HD'),
+        ("androstreamlivetb4", 'TR:Tabii 4 HD'),
+        ("androstreamlivetb5", 'TR:Tabii 5 HD'),
+        ("androstreamlivetb6", 'TR:Tabii 6 HD'),
+        ("androstreamlivetb7", 'TR:Tabii 7 HD'),
+        ("androstreamlivetb8", 'TR:Tabii 8 HD'),
+        ("androstreamliveexn", 'TR:Exxen HD'),
+        ("androstreamliveexn1", 'TR:Exxen 1 HD'),
+        ("androstreamliveexn2", 'TR:Exxen 2 HD'),
+        ("androstreamliveexn3", 'TR:Exxen 3 HD'),
+        ("androstreamliveexn4", 'TR:Exxen 4 HD'),
+        ("androstreamliveexn5", 'TR:Exxen 5 HD'),
+        ("androstreamliveexn6", 'TR:Exxen 6 HD'),
+        ("androstreamliveexn7", 'TR:Exxen 7 HD'),
+        ("androstreamliveexn8", 'TR:Exxen 8 HD'),
+    ]
+
+    def get_src(url, referer=None):
+        try:
+            temp_headers = headers.copy()
+            if referer:
+                temp_headers['Referer'] = referer
+            r = requests.get(PROXY + url, headers=temp_headers, verify=False, timeout=20)
+            return r.text if r.status_code == 200 else None
+        except:
+            return None
+
+    # 1. Adım: Ana sayfayı al
+    h1 = get_src(START)
+    if not h1:
+        print("❌ Andro: Ana sayfa alınamadı")
+        return results
+
+    # 2. Adım: AMP linkini bul
+    soup = BeautifulSoup(h1, 'html.parser')
+    amp_link = soup.find('link', rel='amphtml')
+    if not amp_link:
+        print("❌ Andro: AMP linki bulunamadı")
+        return results
+    
+    amp_url = amp_link.get('href')
+    print(f"✅ Andro AMP URL: {amp_url}")
+
+    # 3. Adım: AMP sayfasını al
+    h2 = get_src(amp_url)
+    if not h2:
+        print("❌ Andro: AMP sayfası alınamadı")
+        return results
+
+    # 4. Adım: Iframe URL'sini bul
+    iframe_match = re.search(r'\[src\]="appState\.currentIframe".*?src="(https?://[^"]+)"', h2, re.DOTALL)
+    if not iframe_match:
+        print("❌ Andro: Iframe URL bulunamadı")
+        return results
+    
+    iframe_url = iframe_match.group(1)
+    print(f"✅ Andro Iframe URL: {iframe_url}")
+
+    # 5. Adım: Iframe içeriğini al
+    h3 = get_src(iframe_url, referer=amp_url)
+    if not h3:
+        print("❌ Andro: Iframe içeriği alınamadı")
+        return results
+
+    # 6. Adım: Base URL'leri bul
+    baseurl_match = re.search(r'baseUrls\s*=\s*\[(.*?)\]', h3, re.DOTALL)
+    if not baseurl_match:
+        print("❌ Andro: Base URL'ler bulunamadı")
+        return results
+
+    # 7. Adım: URL'leri temizle ve listele
+    urls_text = baseurl_match.group(1).replace('"', '').replace("'", "").replace("\n", "").replace("\r", "")
+    servers = [url.strip() for url in urls_text.split(',') if url.strip().startswith("http")]
+    servers = list(set(servers))  # Benzersiz yap
+    
+    print(f"✅ Andro: {len(servers)} sunucu bulundu")
+    
+    # 8. Adım: Aktif sunucuları test et
+    active_servers = []
+    test_id = "androstreamlivebs1"
+    
+    for server in servers:
+        server = server.rstrip('/')
+        test_url = f"{server}/{test_id}.m3u8" if "checklist" in server else f"{server}/checklist/{test_id}.m3u8"
+        test_url = test_url.replace("checklist//", "checklist/")
         
+        try:
+            temp_headers = headers.copy()
+            temp_headers['Referer'] = iframe_url
+            response = requests.get(PROXY + test_url, headers=temp_headers, verify=False, timeout=5)
+            if response.status_code == 200:
+                active_servers.append(server)
+                print(f"✓ Aktif sunucu: {server}")
+        except:
+            continue
+    
+    # 9. Adım: Tüm kanalları aktif sunuculara ekle
+    for server in active_servers:
+        server = server.rstrip('/')
+        for cid, cname in channels:
+            final_url = f"{server}/{cid}.m3u8" if "checklist" in server else f"{server}/checklist/{cid}.m3u8"
+            final_url = final_url.replace("checklist//", "checklist/")
+            
+            # Referer bilgisini ekle
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Andro-Panel", {cname}\n#EXTVLCOPT:http-referrer={iframe_url}\n{final_url}'
+            results.append(entry)
+    
+    print(f"✅ Andro: {len(results)} kanal eklendi")
     return results
 
 # --- MAIN EXECUTION ---
 def main():
     print("🚀 Çok Kaynaklı IPTV Oluşturucu Başlatılıyor...")
+    print(f"📌 Sabit Referrer: {SELCUK_REFERRER}")
     
     all_content = ["#EXTM3U"]
     
-    # 1. Get Selçuk
+    # 1. Get Selçuk (Referrer eklendi)
     selcuk_lines = get_selcuk_content()
     all_content.extend(selcuk_lines)
+    print(f"✅ Selçuk: {len(selcuk_lines)} kanal")
     
     # 2. Get Atom
     atom_lines = get_atom_content()
     all_content.extend(atom_lines)
+    print(f"✅ Atom: {len(atom_lines)} kanal")
     
     # 3. Get TRGoals (Updated)
     trgoals_lines = get_trgoals_content()
     all_content.extend(trgoals_lines)
+    print(f"✅ TRGoals: {len(trgoals_lines)} kanal")
     
-    # 4. Get Andro (Static)
+    # 4. Get Andro (Güncellenmiş)
     andro_lines = get_andro_content()
     all_content.extend(andro_lines)
+    print(f"✅ Andro: {len(andro_lines)} kanal")
     
     # Write to file
     try:
@@ -366,10 +500,12 @@ def main():
         full_path = os.path.abspath(OUTPUT_FILENAME)
         total_channels = len(all_content) - 1
         
-        print(f"\n✅ İŞLEM BAŞARILI: Tüm kaynaklar birleştirildi!")
+        print("\n" + "="*50)
+        print(f"✅ İŞLEM BAŞARILI: Tüm kaynaklar birleştirildi!")
         print(f"💾 Dosya: {OUTPUT_FILENAME}")
-        print(f"📝 Toplam Kanal: {total_channels}")
+        print(f"📊 Toplam Kanal: {total_channels}")
         print(f"📍 Yol: {full_path}")
+        print("="*50)
         
     except IOError as e:
         print(f"\n❌ Dosya yazma hatası: {e}")
