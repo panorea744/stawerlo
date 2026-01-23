@@ -122,9 +122,6 @@ https://8re.d72577a9dd0ec13.sbs/yayinbm1.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", beIN Sports Max 2
 #EXTVLCOPT:http-referer=https://trgoals1509.xyz/
 https://8re.d72577a9dd0ec13.sbs/yayinbm2.m3u8
-#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 1
-#EXTVLCOPT:http-referer=https://trgoals1509.xyz/
-https://8re.d72577a9dd0ec13.sbs/yayinss.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 2
 #EXTVLCOPT:http-referer=https://trgoals1509.xyz/
 https://8re.d72577a9dd0ec13.sbs/yayinss2.m3u8
@@ -203,9 +200,15 @@ https://8re.d72577a9dd0ec13.sbs/yayintabii1.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 2
 #EXTVLCOPT:http-referer=https://trgoals1509.xyz/
 https://8re.d72577a9dd0ec13.sbs/yayintabii2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 3
+#EXTVLCOPT:http-referer=https://trgoals1509.xyz/
+https://8re.d72577a9dd0ec13.sbs/yayintabii3.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 4
 #EXTVLCOPT:http-referer=https://trgoals1509.xyz/
 https://8re.d72577a9dd0ec13.sbs/yayintabii4.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 5
+#EXTVLCOPT:http-referer=https://trgoals1509.xyz/
+https://8re.d72577a9dd0ec13.sbs/yayintabii5.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Andro-Panel", TR:beIN Sport 1 HD
 #EXTVLCOPT:http-referrer=https://mangeinde36.lat/event.html?id=androstreamlivebs1
 https://andro.mangeinde4.lat/checklist/androstreamlivebiraz1.m3u8
