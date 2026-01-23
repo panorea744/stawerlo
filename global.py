@@ -238,7 +238,7 @@ def get_trgoals_content():
 
     # 1. Adım: Aktif Domaini Bul (Hızlı Tarama)
     print("🔍 Aktif TRGoals domaini aranıyor...")
-    for i in range(1495, 2101):
+    for i in range(1509, 2101):
         test = f"{base_pattern}{i}.xyz"
         try:
             # SSL doğrulama kapalı ve kısa timeout ile kontrol et
