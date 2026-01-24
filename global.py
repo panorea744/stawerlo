@@ -246,7 +246,7 @@ def get_trgoals_content():
 
     # 1. Adım: Aktif Domaini Bul
     print("🔍 Aktif TRGoals domaini aranıyor...")
-    for i in range(1509, 2101):
+    for i in range(1511, 2101):
         test = f"{base_pattern}{i}.xyz"
         try:
             r = requests.get(test, headers=HEADERS, timeout=2, verify=False)
