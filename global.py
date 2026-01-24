@@ -244,7 +244,7 @@ def get_trgoals_content():
     results = []
     
     # URL kısaltma servisinden aktif domaini bul
-    SHORT_URL = "https://t.co/6vPuUxO91F"  # Bu senin dediğin link
+    SHORT_URL = "https://raw.githack.com/eniyiyayinci/redirect-cdn/main/index.html"  # Bu senin dediğin link
     
     def follow_redirects(url):
         """URL yönlendirmelerini takip et"""
