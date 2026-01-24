@@ -4,6 +4,7 @@ import urllib3
 import warnings
 import os
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 # --- AYARLAR ---
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -188,7 +189,7 @@ def get_atom_content():
             
     return results
 
-# --- 3. TRGOALS LOGIC (GÜNCELLENMİŞ VERSİYON - VIEW-SOURCE İLE) ---
+# --- 3. TRGOALS LOGIC (GÜNCELLENMİŞ - URL KISALTMA SERVİSİ İLE) ---
 TRGOALS_IDS = {
     # BeIN Sports
     "yayinzirve": "beIN Sports 1",
@@ -239,37 +240,66 @@ TRGOALS_IDS = {
 }
 
 def get_trgoals_content():
-    print("--- 📡 TRGoals Taranıyor (Gelişmiş Mod) ---")
+    print("--- 📡 TRGoals Taranıyor (URL Kısaltma ile) ---")
     results = []
-    base_pattern = "https://trgoals"
-    domain = ""
-
-    # 1. Adım: Aktif Domaini Bul
-    print("🔍 Aktif TRGoals domaini aranıyor...")
-    for i in range(1511, 2101):
-        test = f"{base_pattern}{i}.xyz"
+    
+    # URL kısaltma servisinden aktif domaini bul
+    SHORT_URL = "https://t.co/6vPuUxO91F"  # Bu senin dediğin link
+    
+    def follow_redirects(url):
+        """URL yönlendirmelerini takip et"""
         try:
-            r = requests.get(test, headers=HEADERS, timeout=2, verify=False)
-            if r.status_code == 200:
-                domain = test
-                print(f"✅ TRGoals Domain Bulundu: {domain}")
-                break
-        except:
-            continue
+            headers = HEADERS.copy()
+            # Twitter linki için özel header
+            headers["User-Agent"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
             
-    if not domain:
+            session = requests.Session()
+            session.max_redirects = 5
+            response = session.get(url, headers=headers, timeout=10, allow_redirects=True, verify=False)
+            
+            return response.url
+        except:
+            return None
+    
+    print("🔍 URL kısaltma servisinden aktif domain aranıyor...")
+    
+    # 1. Adım: Kısaltılmış URL'den aktif domaini bul
+    final_url = follow_redirects(SHORT_URL)
+    
+    if not final_url:
+        print("❌ URL kısaltma servisine ulaşılamadı, eski yönteme geçiliyor...")
+        # Eski yöntemle domain bul
+        base_pattern = "https://trgoals"
+        for i in range(1511, 2101):
+            test = f"{base_pattern}{i}.xyz"
+            try:
+                r = requests.get(test, headers=HEADERS, timeout=2, verify=False)
+                if r.status_code == 200:
+                    final_url = test
+                    break
+            except:
+                continue
+    
+    if not final_url:
         print("❌ TRGoals: Aktif domain bulunamadı.")
         return results
-
+    
+    # Domaini temizle
+    parsed = urlparse(final_url)
+    domain = f"{parsed.scheme}://{parsed.netloc}"
+    
+    print(f"✅ TRGoals Domain Bulundu: {domain}")
+    
     # 2. Adım: VIEW-SOURCE Mantığı ile Kanalları Çek
     print("⏳ Kanallar çözümleniyor...")
     
     # Aktif domain için referer hazırla
     referer_url = domain + "/"
     
+    success_count = 0
     for cid, name in TRGOALS_IDS.items():
         try:
-            # VIEW-SOURCE gibi sayfa kaynağını al
+            # Channel sayfasını al
             url = f"{domain}/channel.html?id={cid}"
             
             # Referer ile sayfa kaynağını al
@@ -278,17 +308,17 @@ def get_trgoals_content():
             
             r = requests.get(url, headers=temp_headers, timeout=5, verify=False)
             
-            # VIEW-SOURCE içinde CONFIG'deki baseUrl'i ara
-            # Pattern: CONFIG={baseUrl: "URL"}
-            # Pattern: baseUrl: "URL"
-            # Pattern: const BASE_URL = "URL"
-            
+            if r.status_code != 200:
+                continue
+                
+            # CONFIG içinde baseUrl'i ara
             patterns = [
                 r'CONFIG\s*=\s*{[^}]*baseUrl\s*:\s*["\'](.*?)["\']',
                 r'baseUrl\s*:\s*["\'](.*?)["\']',
                 r'const\s+BASE_URL\s*=\s*["\'](.*?)["\']',
                 r'let\s+baseUrl\s*=\s*["\'](.*?)["\']',
-                r'var\s+baseUrl\s*=\s*["\'](.*?)["\']'
+                r'var\s+baseUrl\s*=\s*["\'](.*?)["\']',
+                r'src\s*=\s*["\'](.*?\.m3u8)["\']'
             ]
             
             baseurl = ""
@@ -301,25 +331,43 @@ def get_trgoals_content():
             if baseurl:
                 # baseUrl temizleme
                 baseurl = baseurl.rstrip('/')
-                if not baseurl.endswith('.m3u8'):
-                    full_url = f"{baseurl}/{cid}.m3u8"
+                
+                # URL oluştur
+                if baseurl.endswith('.m3u8'):
+                    full_url = baseurl
                 else:
-                    full_url = baseurl.replace('.m3u8', f'/{cid}.m3u8')
+                    full_url = f"{baseurl}/{cid}.m3u8"
+                
+                # URL'yi kontrol et
+                if not full_url.startswith(('http://', 'https://')):
+                    # Eğer relative URL ise domain ekle
+                    if full_url.startswith('/'):
+                        full_url = domain + full_url
+                    else:
+                        full_url = domain + '/' + full_url
                 
                 # Referer bilgisini ekle
                 entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={referer_url}\n{full_url}'
                 results.append(entry)
+                success_count += 1
                 print(f"✓ {name}: {cid} başarılı")
             else:
-                # DEBUG: Eğer baseUrl bulunamazsa, sayfanın bir kısmını göster
-                if "CONFIG" in r.text or "baseUrl" in r.text:
-                    print(f"⚠ {name}: baseUrl bulundu ancak parse edilemedi")
+                # DEBUG için
+                if r.text and len(r.text) > 100:
+                    # Sayfada m3u8 ara
+                    m3u8_match = re.search(r'["\'](https?://[^"\']+\.m3u8[^"\']*)["\']', r.text)
+                    if m3u8_match:
+                        full_url = m3u8_match.group(1)
+                        entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={referer_url}\n{full_url}'
+                        results.append(entry)
+                        success_count += 1
+                        print(f"✓ {name}: M3U8 direkt bulundu")
                     
         except Exception as e:
             # Hata durumunda sessizce geç
             continue
             
-    print(f"✅ TRGoals: {len(results)} kanal bulundu.")
+    print(f"✅ TRGoals: {success_count} kanal bulundu.")
     return results
 
 # --- 4. ANDRO PANEL (GÜNCELLENMİŞ VERSİYON) ---
@@ -482,7 +530,7 @@ def main():
     all_content.extend(atom_lines)
     print(f"✅ Atom: {len(atom_lines)} kanal")
     
-    # 3. Get TRGoals (Updated)
+    # 3. Get TRGoals (Updated with URL shortener)
     trgoals_lines = get_trgoals_content()
     all_content.extend(trgoals_lines)
     print(f"✅ TRGoals: {len(trgoals_lines)} kanal")
