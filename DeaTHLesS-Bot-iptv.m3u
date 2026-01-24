@@ -122,6 +122,9 @@ https://8re.d72577a9dd0ec13.sbs/yayinbm1.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", beIN Sports Max 2
 #EXTVLCOPT:http-referer=https://trgoals1509.xyz/
 https://8re.d72577a9dd0ec13.sbs/yayinbm2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 1
+#EXTVLCOPT:http-referer=https://trgoals1509.xyz/
+https://8re.d72577a9dd0ec13.sbs/yayinss.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 2
 #EXTVLCOPT:http-referer=https://trgoals1509.xyz/
 https://8re.d72577a9dd0ec13.sbs/yayinss2.m3u8
