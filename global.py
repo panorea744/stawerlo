@@ -4,7 +4,6 @@ import urllib3
 import warnings
 import os
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
 
 # --- AYARLAR ---
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -243,111 +242,110 @@ def get_trgoals_content():
     print("--- 📡 TRGoals Taranıyor (Zincirleme Yönlendirme) ---")
     results = []
     
-    # Zincirleme yönlendirme linkleri
-    SHORT_URL_1 = "https://t.co/6vPuUxO91F"  # İlk kısaltma
-    SHORT_URL_2 = "https://raw.githack.com/eniyiyayinci/redirect-cdn/main/index.html"  # İkinci kısaltma
-    
-    def follow_all_redirects(start_url):
-        """Tüm yönlendirmeleri takip et"""
-        try:
-            current_url = start_url
-            redirect_count = 0
-            max_redirects = 10
+    def find_real_url(start_url):
+        """Zincirleme yönlendirmeleri takip ederek asıl URL'yi bul"""
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
+        
+        visited = set()
+        current_url = start_url
+        
+        print("🔍 Zincirleme yönlendirme takip ediliyor...")
+        
+        while True:
+            if current_url in visited:
+                print("⚠️ Döngü tespit edildi")
+                break
+                
+            visited.add(current_url)
+            print(f"  → {current_url}")
             
-            session = requests.Session()
-            session.max_redirects = 10
-            
-            # İlk isteği yap
-            response = session.get(start_url, headers=HEADERS, timeout=10, 
-                                 allow_redirects=False, verify=False)
-            
-            # Manuel yönlendirme takibi
-            while redirect_count < max_redirects:
-                if response.status_code in [301, 302, 303, 307, 308]:
-                    if 'location' in response.headers:
-                        current_url = response.headers['location']
-                        print(f"↪️ Yönlendirme {redirect_count + 1}: {current_url}")
-                        redirect_count += 1
+            try:
+                r = requests.get(
+                    current_url,
+                    headers=headers,
+                    allow_redirects=True,
+                    timeout=10,
+                    verify=False
+                )
+                
+                # HTTP redirect varsa
+                if r.url != current_url:
+                    current_url = r.url
+                    continue
+                
+                html = r.text
+                
+                # JS + META yönlendirme yakalama
+                patterns = [
+                    r'window\.location\.href\s*=\s*[\'"](.*?)[\'"]',
+                    r'window\.location\s*=\s*[\'"](.*?)[\'"]',
+                    r'location\.replace\([\'"](.*?)[\'"]\)',
+                    r'<meta[^>]+url=([^\"]+)',
+                    r'http-equiv=["\']refresh["\'][^>]+url=["\'](.*?)["\']'
+                ]
+                
+                found = False
+                
+                for p in patterns:
+                    m = re.search(p, html, re.IGNORECASE)
+                    if m:
+                        next_url = m.group(1).strip()
+                        if not next_url.startswith(('http://', 'https://')):
+                            # Relative URL ise base ekle
+                            from urllib.parse import urljoin
+                            next_url = urljoin(current_url, next_url)
                         
-                        # Yeni URL'ye istek yap
-                        response = session.get(current_url, headers=HEADERS, timeout=10,
-                                             allow_redirects=False, verify=False)
-                    else:
+                        print(f"  ↪ JS/META yönlendirme: {next_url}")
+                        current_url = next_url
+                        found = True
                         break
-                else:
-                    break
-            
-            return current_url, response.text if response.status_code == 200 else None
-            
-        except Exception as e:
-            print(f"❌ Yönlendirme hatası: {e}")
-            return None, None
+                
+                if not found:
+                    # artık asıl yer burası
+                    print(f"\n✅ SON ANA URL BULUNDU: {current_url}")
+                    return current_url
+                    
+            except Exception as e:
+                print(f"❌ Hata: {e}")
+                return None
     
-    def get_active_domain():
-        """Aktif domaini zincirleme yönlendirme ile bul"""
-        print("🔍 Aktif TRGoals domaini aranıyor (zincirleme yönlendirme)...")
-        
-        # 1. Adım: İlk kısaltmadan başla
-        print(f"1. Adım: {SHORT_URL_1}")
-        final_url_1, html_1 = follow_all_redirects(SHORT_URL_1)
-        
-        if final_url_1 and "raw.githack.com" in final_url_1:
-            # 2. Adım: İkinci kısaltmaya git
-            print(f"2. Adım: {final_url_1}")
-            final_url_2, html_2 = follow_all_redirects(final_url_1)
-            
-            if final_url_2:
-                # Domaini çıkar
-                parsed = urlparse(final_url_2)
-                domain = f"{parsed.scheme}://{parsed.netloc}"
-                return domain, html_2
-        
-        # Eğer zincirleme çalışmazsa, direkt ikinci linkten dene
-        print("⚠️ Zincirleme çalışmadı, ikinci link direkt deneniyor...")
-        final_url_2, html_2 = follow_all_redirects(SHORT_URL_2)
-        
-        if final_url_2:
-            parsed = urlparse(final_url_2)
-            domain = f"{parsed.scheme}://{parsed.netloc}"
-            return domain, html_2
-        
-        # Hiçbiri çalışmazsa eski yöntem
-        print("⚠️ Yönlendirme çalışmadı, eski yönteme geçiliyor...")
+    # 1. Adım: Zincirleme yönlendirme ile aktif domaini bul
+    SHORT_URL = "https://t.co/6vPuUxO91F"
+    final_url = find_real_url(SHORT_URL)
+    
+    if not final_url:
+        print("❌ Zincirleme yönlendirme ile domain bulunamadı, eski yönteme geçiliyor...")
+        # Eski yöntemle domain bul
         base_pattern = "https://trgoals"
-        for i in range(1200, 2101):
+        for i in range(1509, 2101):
             test = f"{base_pattern}{i}.xyz"
             try:
                 r = requests.get(test, headers=HEADERS, timeout=2, verify=False)
                 if r.status_code == 200:
-                    print(f"✅ Eski yöntemle bulundu: {test}")
-                    return test, r.text
+                    final_url = test
+                    break
             except:
                 continue
-        
-        return None, None
     
-    # Aktif domaini bul
-    domain, domain_html = get_active_domain()
-    
-    if not domain:
+    if not final_url:
         print("❌ TRGoals: Aktif domain bulunamadı.")
         return results
     
-    print(f"✅ TRGoals Domain Bulundu: {domain}")
+    # Domaini temizle
+    domain = final_url.rstrip('/')
+    print(f"✅ TRGoals Domain: {domain}")
     
-    # 2. Adım: Kanalları çek
+    # 2. Adım: VIEW-SOURCE Mantığı ile Kanalları Çek
     print("⏳ Kanallar çözümleniyor...")
     
-    # Referer hazırla
-    referer_url = domain.rstrip('/') + "/"
+    # Aktif domain için referer hazırla
+    referer_url = domain + "/"
     
     success_count = 0
-    total_channels = len(TRGOALS_IDS)
-    
-    for idx, (cid, name) in enumerate(TRGOALS_IDS.items(), 1):
+    for cid, name in TRGOALS_IDS.items():
         try:
-            print(f"📡 [{idx}/{total_channels}] {name} aranıyor...")
-            
             # Channel sayfasını al
             url = f"{domain}/channel.html?id={cid}"
             
@@ -355,91 +353,54 @@ def get_trgoals_content():
             temp_headers = HEADERS.copy()
             temp_headers["Referer"] = referer_url
             
-            r = requests.get(url, headers=temp_headers, timeout=8, verify=False)
+            r = requests.get(url, headers=temp_headers, timeout=5, verify=False)
             
             if r.status_code != 200:
-                print(f"  ❌ {name}: Sayfa yüklenemedi ({r.status_code})")
                 continue
-            
-            # Çoklu pattern arama
+                
+            # CONFIG içinde baseUrl'i ara
             patterns = [
-                r'CONFIG\s*=\s*{[^}]*baseUrl\s*:\s*["\'](https?://[^"\']+?)["\']',
-                r'const\s+baseUrl\s*=\s*["\'](https?://[^"\']+?)["\']',
-                r'let\s+baseUrl\s*=\s*["\'](https?://[^"\']+?)["\']',
-                r'var\s+baseUrl\s*=\s*["\'](https?://[^"\']+?)["\']',
-                r'baseUrl\s*:\s*["\'](https?://[^"\']+?)["\']',
-                r'const\s+BASE_URL\s*=\s*["\'](https?://[^"\']+?)["\']',
-                r'src\s*=\s*["\'](https?://[^"\']+?\.m3u8)["\']',
-                r'["\'](https?://[^"\']+?\.m3u8)["\']'
+                r'CONFIG\s*=\s*{[^}]*baseUrl\s*:\s*["\'](.*?)["\']',
+                r'baseUrl\s*:\s*["\'](.*?)["\']',
+                r'const\s+BASE_URL\s*=\s*["\'](.*?)["\']',
+                r'let\s+baseUrl\s*=\s*["\'](.*?)["\']',
+                r'var\s+baseUrl\s*=\s*["\'](.*?)["\']'
             ]
             
-            baseurl = None
+            baseurl = ""
             for pattern in patterns:
-                matches = re.findall(pattern, r.text)
-                if matches:
-                    # En uygun URL'yi seç
-                    for match in matches:
-                        if match and 'http' in match:
-                            baseurl = match
-                            break
-                if baseurl:
+                match = re.search(pattern, r.text, re.IGNORECASE)
+                if match:
+                    baseurl = match.group(1)
                     break
             
             if baseurl:
-                # URL temizleme
-                baseurl = baseurl.strip().rstrip('/')
-                
-                # M3U8 URL'sini oluştur
+                # baseUrl temizleme
+                baseurl = baseurl.rstrip('/')
                 if not baseurl.endswith('.m3u8'):
-                    # Eğer baseurl zaten m3u8 değilse, channel id ekle
-                    if not baseurl.endswith('/'):
-                        baseurl += '/'
-                    full_url = f"{baseurl}{cid}.m3u8"
+                    full_url = f"{baseurl}/{cid}.m3u8"
                 else:
-                    full_url = baseurl
+                    full_url = baseurl.replace('.m3u8', f'/{cid}.m3u8')
                 
-                # Debug için
-                print(f"  ✅ {name}: {full_url[:60]}...")
-                
-                # M3U8 kontrolü (opsiyonel)
-                if not full_url.endswith('.m3u8'):
-                    print(f"  ⚠️ {name}: URL m3u8 ile bitmiyor, kontrol ediliyor...")
-                    # Eğer URL m3u8 ile bitmiyorsa, direkt kullan
-                
-                # Entry oluştur
+                # Referer bilgisini ekle
                 entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={referer_url}\n{full_url}'
                 results.append(entry)
                 success_count += 1
-                
+                print(f"✓ {name}: {cid} başarılı")
             else:
-                print(f"  ❌ {name}: URL bulunamadı")
-                # Sayfanın kaynağını debug için göster
-                if len(r.text) < 5000:  # Çok uzun değilse
-                    print(f"  🔍 Sayfa kaynağı (kısaltılmış): {r.text[:500]}...")
-        
+                # Eğer baseUrl bulunamazsa, direkt m3u8 ara
+                m3u8_match = re.search(r'["\'](https?://[^"\']+?\.m3u8)["\']', r.text)
+                if m3u8_match:
+                    full_url = m3u8_match.group(1)
+                    entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n#EXTVLCOPT:http-referer={referer_url}\n{full_url}'
+                    results.append(entry)
+                    success_count += 1
+                    print(f"✓ {name}: M3U8 direkt bulundu")
+                    
         except Exception as e:
-            print(f"  ❌ {name}: Hata - {str(e)[:50]}")
             continue
-    
-    print(f"✅ TRGoals: {success_count}/{total_channels} kanal bulundu.")
-    
-    # Eğer hiç kanal bulunamadıysa, alternatif yöntem dene
-    if success_count == 0 and domain_html:
-        print("⚠️ Hiç kanal bulunamadı, alternatif yöntem deneniyor...")
-        # Domain HTML'inde direkt m3u8 ara
-        m3u8_pattern = r'["\'](https?://[^"\']+?\.m3u8)["\']'
-        m3u8_matches = re.findall(m3u8_pattern, domain_html)
-        
-        for match in m3u8_matches[:20]:  # İlk 20'yi al
-            if match and 'm3u8' in match:
-                # Channel adını tahmin et
-                for cid2, name2 in TRGOALS_IDS.items():
-                    if cid2 in match:
-                        entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name2}\n#EXTVLCOPT:http-referer={referer_url}\n{match}'
-                        results.append(entry)
-                        print(f"  ✅ Alternatif: {name2} bulundu")
-                        break
-    
+            
+    print(f"✅ TRGoals: {success_count} kanal bulundu.")
     return results
 
 # --- 4. ANDRO PANEL (GÜNCELLENMİŞ VERSİYON) ---
