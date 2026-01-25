@@ -128,6 +128,9 @@ https://5or.d72577a9dd0ec15.sbs/yayinss.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 2
 #EXTVLCOPT:http-referer=https://trgoals1512.xyz/
 https://5or.d72577a9dd0ec15.sbs/yayinss2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport Plus 1
+#EXTVLCOPT:http-referer=https://trgoals1512.xyz/
+https://5or.d72577a9dd0ec15.sbs/yayinssplus.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport Plus 2
 #EXTVLCOPT:http-referer=https://trgoals1512.xyz/
 https://5or.d72577a9dd0ec15.sbs/yayinssplus2.m3u8
