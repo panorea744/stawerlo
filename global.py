@@ -20,6 +20,7 @@ STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
 
 # --- 1. SELCUK SPORTS LOGIC (GÜNCELLENMİŞ REFERRER İLE) ---
 SELCUK_NAMES = {
+    "selcukobs1": "beIN Sports 1",
     "selcukbeinsports1": "beIN Sports 1",
     "selcukbeinsports2": "beIN Sports 2",
     "selcukbeinsports3": "beIN Sports 3",
