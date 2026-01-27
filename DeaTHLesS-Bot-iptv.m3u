@@ -161,6 +161,9 @@ https://0vy.d72577a9dd0ec19.sbs/yayintrtspor.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", TRT Spor 2
 #EXTVLCOPT:http-referer=https://trgoals1517.xyz/
 https://0vy.d72577a9dd0ec19.sbs/yayintrtspor2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", A Spor
+#EXTVLCOPT:http-referer=https://trgoals1517.xyz/
+https://0vy.d72577a9dd0ec19.sbs/yayinas.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", ATV
 #EXTVLCOPT:http-referer=https://trgoals1517.xyz/
 https://0vy.d72577a9dd0ec19.sbs/yayinatv.m3u8
@@ -206,6 +209,9 @@ https://0vy.d72577a9dd0ec19.sbs/yayintabii2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 3
 #EXTVLCOPT:http-referer=https://trgoals1517.xyz/
 https://0vy.d72577a9dd0ec19.sbs/yayintabii3.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 4
+#EXTVLCOPT:http-referer=https://trgoals1517.xyz/
+https://0vy.d72577a9dd0ec19.sbs/yayintabii4.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 5
 #EXTVLCOPT:http-referer=https://trgoals1517.xyz/
 https://0vy.d72577a9dd0ec19.sbs/yayintabii5.m3u8
