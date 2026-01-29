@@ -131,6 +131,12 @@ https://9vy.d72577a9dd0ec19.sbs/yayinss.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 2
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinss2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport Plus 1
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinssplus.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport Plus 2
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinssplus2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tivibu Spor 1
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayint1.m3u8
@@ -140,6 +146,9 @@ https://9vy.d72577a9dd0ec19.sbs/yayint2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tivibu Spor 3
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayint3.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tivibu Spor 4
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayint4.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Smart Spor 1
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinsmarts.m3u8
@@ -164,12 +173,24 @@ https://9vy.d72577a9dd0ec19.sbs/yayintv8.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", TV8.5
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayintv85.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", NBA TV
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinnbatv.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Exxen Spor 1
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinex1.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Exxen Spor 2
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinex2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Exxen Spor 3
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinex3.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Exxen Spor 4
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinex4.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Exxen Spor 5
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinex5.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Exxen Spor 6
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinex6.m3u8
@@ -182,6 +203,18 @@ https://9vy.d72577a9dd0ec19.sbs/yayinex8.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 1
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayintabii1.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 2
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayintabii2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 3
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayintabii3.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 4
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayintabii4.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", Tabii Spor 5
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayintabii5.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Andro-Panel", TR:beIN Sport 1 HD
 #EXTVLCOPT:http-referrer=https://mangeinde35.lat/event.html?id=androstreamlivebs1
 https://andro.mangeinde4.lat/checklist/androstreamlivebiraz1.m3u8
