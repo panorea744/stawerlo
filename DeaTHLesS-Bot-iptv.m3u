@@ -131,6 +131,9 @@ https://9vy.d72577a9dd0ec19.sbs/yayinss.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport 2
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinss2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport Plus 1
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinssplus.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", S Sport Plus 2
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinssplus2.m3u8
@@ -161,9 +164,15 @@ https://9vy.d72577a9dd0ec19.sbs/yayintrtspor2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", A Spor
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinas.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", ATV
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayinatv.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", TV8
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayintv8.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", TV8.5
+#EXTVLCOPT:http-referer=https://trgoals1521.xyz/
+https://9vy.d72577a9dd0ec19.sbs/yayintv85.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="TRGoals-Panel", NBA TV
 #EXTVLCOPT:http-referer=https://trgoals1521.xyz/
 https://9vy.d72577a9dd0ec19.sbs/yayinnbatv.m3u8
