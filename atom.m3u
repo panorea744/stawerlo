@@ -1,4 +1,6 @@
 #EXTM3U
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 1
+https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-11.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 2
 https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 3
@@ -11,5 +13,9 @@ https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurd
 https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/s-sport-2.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", Tivibu Spor 1
 https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-1.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", Tivibu Spor 2
+https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-2.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", Tivibu Spor 3
+https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-3.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", TRT Spor
 https://spring-block-9b5e.gizemoeseni.workers.dev/https://corestream.ronaldovurdu.help//hls/trt-spor.m3u8
