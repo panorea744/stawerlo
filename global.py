@@ -339,7 +339,6 @@ def get_renconnect_content():
     print("--- 📡 6. RenConnect (Palazzo) Taranıyor ---")
     results = []
     
-    # Kanal Listesi
     channels = [
         ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
         ("603", "beIN Sports 3"), ("604", "beIN Sports 4"),
@@ -352,11 +351,9 @@ def get_renconnect_content():
     base_pattern = "https://palazzocanli{}.com"
     headers = HEADERS.copy()
 
-    # 1. Aktif Domaini Bul (Threading ile hızlı tarama)
     def check_site(index):
         url = base_pattern.format(index)
         try:
-            # Sadece header kontrolü (hız için)
             r = requests.head(url, headers=headers, timeout=3, verify=False)
             if r.status_code == 200:
                 return url
@@ -383,50 +380,44 @@ def get_renconnect_content():
     print(f"✅ RenConnect Domain: {active_site}")
 
     try:
-        # 2. Sayfadan Player Linkini Çek
         r = requests.get(active_site, headers=headers, timeout=10, verify=False)
-        # Regex: data-stream="(https://(.*?)/player/player.php?id=(.*?))"
-        matches = re.search(r'data-stream="(https://(.*?)/player/player\.php\?id=(.*?))"', r.text)
+        # S Sport 1 (id=607) şablonunu yakala
+        player_match = re.search(r'data-stream="(https://([^/]+)/player/player\.php\?id=607)"', r.text)
         
-        if not matches:
-            print("❌ RenConnect: Player linki bulunamadı.")
+        if not player_match:
+            print("❌ RenConnect: Şablon kanal (607) bulunamadı.")
             return results
-            
-        player_url = matches.group(1)
-        betconnect_domain = matches.group(2) # "betconnecttv85.com" gibi
-        current_id = matches.group(3)        # "601" gibi
-        referer_url = f"https://{betconnect_domain}/" # Betconnect domaini referer olacak
 
-        # 3. Player İçinden Stream'i Çöz (Base64)
-        player_headers = headers.copy()
-        player_headers["Referer"] = active_site
+        player_url = player_match.group(1)
+        player_domain = player_match.group(2)
+        referer_url = f"https://{player_domain}/"
+
+        p_headers = headers.copy()
+        p_headers["Referer"] = active_site
+        r_player = requests.get(player_url, headers=p_headers, timeout=10, verify=False)
         
-        r_player = requests.get(player_url, headers=player_headers, timeout=10, verify=False)
+        # m3u8 ara (Düz veya Base64)
+        m3u8_link = None
+        plain_match = re.search(r'["\'](http[s]?://[^"\']+\.m3u8[^"\']*)["\']', r_player.text)
         
-        # Regex: var stream = atob("(.*?)");
-        stream_match = re.search(r'var stream = atob\("(.*?)"\);', r_player.text)
-        
-        if not stream_match:
-            print("❌ RenConnect: Stream Base64 kodu bulunamadı.")
+        if plain_match:
+            m3u8_link = plain_match.group(1).replace("\\/", "/")
+        else:
+            b64_match = re.search(r'atob\s*\(\s*["\']([^"\']+)["\']\s*\)', r_player.text)
+            if b64_match:
+                decoded = base64.b64decode(b64_match.group(1)).decode('utf-8')
+                m3u8_link = decoded
+
+        if not m3u8_link:
+            print("❌ RenConnect: m3u8 şablonu çözülemedi.")
             return results
-            
-        # Base64 Decode
-        b64_string = stream_match.group(1)
-        decoded_bytes = base64.b64decode(b64_string)
-        decoded_url = decoded_bytes.decode('utf-8')
+
+        m3u8_clean = m3u8_link.split('?')[0]
+        template_url = m3u8_clean.replace("/607/", "/{ID}/")
         
-        # Link temizleme ve Şablon Oluşturma
-        # Örnek decoded: https://.../stream/601/playlist.m3u8?token=...
-        clean_url = decoded_url.split('?')[0]
-        
-        # URL içinde geçen ID'yi (örn 601) bulup {ID} ile değiştir
-        # Regex ile ID'yi tam olarak yakalayıp değiştirmek daha güvenli
-        template_url = clean_url.replace(f"/{current_id}/", "/{ID}/")
-        
-        # 4. Listeyi Oluştur
         for cid, cname in channels:
             final_link = template_url.replace("{ID}", cid)
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {cname}\n#EXTVLCOPT:http-referer={referer_url}\n{final_link}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {cname}\n#EXTVLCOPT:http-referrer={referer_url}\n{final_link}'
             results.append(entry)
             
         print(f"✅ RenConnect: {len(results)} kanal eklendi.")
