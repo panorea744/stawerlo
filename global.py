@@ -340,7 +340,7 @@ def get_renconnect_content():
     results = []
     
     channels = [
-        ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
+        ("600", "beIN Sports 1"), ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
         ("603", "beIN Sports 3"), ("604", "beIN Sports 4"),
         ("605", "beIN Sports 5"), ("607", "S Sport 1"),
         ("608", "S Sport 2"), ("701", "Tivibu Spor 1"),
@@ -466,3 +466,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
