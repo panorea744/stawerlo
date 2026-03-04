@@ -1,124 +1,45 @@
-name: Zeus TV Playlist Güncelleme
+name: Zeus TV M3U8 Botu
 
 on:
   schedule:
-    # Her 10 dakikada bir çalışır
+    # Her 10 dakikada bir çalıştırır
     - cron: '*/10 * * * *'
-  workflow_dispatch:  # Manuel çalıştırmak için
+  workflow_dispatch:
+    # Bu satır sayesinde GitHub Actions sekmesinden manuel olarak da başlatabilirsin
 
 jobs:
-  update-playlist:
+  update-m3u:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Repository'ye push izni için
-    
+      contents: write # Botun repoya dosya yükleyebilmesi için yazma izni
+
     steps:
-    - name: 📥 Repoyu klonla
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Tüm geçmişi getir
-    
-    - name: 🐍 Python'u kur
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-        cache: 'pip'
-    
-    - name: 📦 Gerekli paketleri yükle
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests urllib3
-        
-    - name: 🤖 Zeus botunu çalıştır
-      id: run_bot
-      continue-on-error: true
-      run: |
-        python zeus_bot.py > bot_output.log 2>&1
-        echo "status=$?" >> $GITHUB_OUTPUT
-    
-    - name: 📝 Bot çıktısını göster
-      if: always()
-      run: |
-        echo "### 🤖 Bot Çalıştırma Sonucu" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        cat bot_output.log >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-    
-    - name: 🔍 Değişiklikleri kontrol et
-      id: check_changes
-      run: |
-        # Sadece klasör ve dosya varsa ekle (Hata vermesini engeller)
-        if [ -d "teyzeniyerim" ]; then git add teyzeniyerim/; fi
-        if [ -f "ventino.m3u" ]; then git add ventino.m3u; fi
-        
-        # Değişiklik var mı kontrol et
-        if git diff --staged --quiet; then
-          echo "changed=false" >> $GITHUB_OUTPUT
-          echo "📭 Hiçbir değişiklik yok."
-        else
-          echo "changed=true" >> $GITHUB_OUTPUT
-          echo "📦 Değişiklikler bulundu."
-        fi
-    
-    - name: 📊 İstatistikleri hazırla
-      if: steps.check_changes.outputs.changed == 'true'
-      id: stats
-      run: |
-        # Kaç dosyanın değiştiğini bul
-        CHANGED_FILES=$(git diff --staged --name-only | wc -l)
-        echo "📊 Değişen dosya sayısı: $CHANGED_FILES"
-        echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-        
-        # Aktif domaini bul
-        if [ -f "bot_output.log" ]; then
-          ACTIVE_DOMAIN=$(grep "Aktif domain bulundu" bot_output.log | tail -1 | grep -oP 'https?://[^\s]+')
-          echo "active_domain=$ACTIVE_DOMAIN" >> $GITHUB_OUTPUT
-        fi
-    
-    - name: 🚀 Değişiklikleri pushla
-      if: steps.check_changes.outputs.changed == 'true'
-      run: |
-        # Git yapılandırması
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        
-        # Commit mesajını hazırla
-        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
-        ACTIVE_INFO=""
-        if [ -n "${{ steps.stats.outputs.active_domain }}" ]; then
-          ACTIVE_INFO=" - Domain: ${{ steps.stats.outputs.active_domain }}"
-        fi
-        
-        git commit -m "🔄 M3U8 listesi ve ventino.m3u güncellendi $TIMESTAMP$ACTIVE_INFO"
-        git push
-    
-    - name: ✅ Başarılı güncelleme bildirimi
-      if: success() && steps.check_changes.outputs.changed == 'true'
-      run: |
-        echo "## ✅ Playlist Başarıyla Güncellendi! 🎉" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "- 📅 Zaman: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
-        echo "- 📊 Değişen dosya: ${{ steps.stats.outputs.files }}" >> $GITHUB_STEP_SUMMARY
-        echo "- 🌐 Aktif domain: ${{ steps.stats.outputs.active_domain }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Tüm değişiklikler repository'ye pushlandı." >> $GITHUB_STEP_SUMMARY
-    
-    - name: ℹ️ Güncelleme yok bildirimi
-      if: success() && steps.check_changes.outputs.changed == 'false'
-      run: |
-        echo "### ℹ️ Güncelleme Gerekmiyor" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Son kontrolde playlist'lerde değişiklik bulunamadı veya bot yeni dosya oluşturmadı." >> $GITHUB_STEP_SUMMARY
-        echo "- 📅 Kontrol zamanı: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
-    
-    - name: ❌ Hata durumu bildirimi
-      if: failure()
-      run: |
-        echo "## ❌ Playlist Güncelleme Başarısız!" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Bot çalıştırılırken bir hata oluştu. Lütfen logları kontrol edin." >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        cat bot_output.log >> $GITHUB_STEP_SUMMARY || echo "Log dosyası bulunamadı" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMAR
-        Y
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python Ortamını Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Gerekli Kütüphaneleri Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests urllib3
+
+      - name: Botu Çalıştır
+        run: python zeus_bot.py
+
+      - name: Değişiklikleri GitHub'a Yükle
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Yeni veya değişen dosyaları ekle
+          git add teyzeniyerim/
+          git add ventino.m3u
+          
+          # Eğer dosyalarda bir değişiklik varsa commit ve push yap
+          git diff-index --quiet HEAD || git commit -m "🤖 Otomatik Güncelleme: Kanallar Yenilendi"
+          git push
+          
