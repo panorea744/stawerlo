@@ -47,8 +47,9 @@ jobs:
     - name: 🔍 Değişiklikleri kontrol et
       id: check_changes
       run: |
-        # Hem klasörü hem de ana dizindeki ventino.m3u dosyasını ekle
-        git add teyzeniyerim/ ventino.m3u
+        # Sadece klasör ve dosya varsa ekle (Hata vermesini engeller)
+        if [ -d "teyzeniyerim" ]; then git add teyzeniyerim/; fi
+        if [ -f "ventino.m3u" ]; then git add ventino.m3u; fi
         
         # Değişiklik var mı kontrol et
         if git diff --staged --quiet; then
@@ -107,7 +108,7 @@ jobs:
       run: |
         echo "### ℹ️ Güncelleme Gerekmiyor" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Son kontrolde playlist'lerde değişiklik bulunamadı. Domain hala aktif ve aynı." >> $GITHUB_STEP_SUMMARY
+        echo "Son kontrolde playlist'lerde değişiklik bulunamadı veya bot yeni dosya oluşturmadı." >> $GITHUB_STEP_SUMMARY
         echo "- 📅 Kontrol zamanı: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
     
     - name: ❌ Hata durumu bildirimi
