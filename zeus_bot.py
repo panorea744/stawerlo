@@ -56,7 +56,6 @@ def get_base_url_from_page(active_domain, channel_id='b1'):
         html_content = response.text
 
         # Base64 kodunu bul (genellikle atob() içinde veya bir değişkende)
-        # Farklı kalıpları dene:
         patterns = [
             r'atob\("([A-Za-z0-9+/=]+)"\)',  # En yaygın: atob("base64...")
             r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"',  # var _0x2a1 = "base64..."
@@ -94,26 +93,29 @@ def get_base_url_from_page(active_domain, channel_id='b1'):
 
 # --- 3. FONKSİYON: TÜM KANALLAR İÇİN .m3u8 DOSYALARINI OLUŞTUR ---
 def create_m3u8_files(base_video_url, github_folder):
-    """Verilen base video URL'sini kullanarak her kanal için bir .m3u8 dosyası oluşturur."""
-    print(f"\n📁 '{github_folder}' klasöründe .m3u8 dosyaları oluşturuluyor...")
+    """Verilen base video URL'sini kullanarak her kanal için bir .m3u8 dosyası ve ana bir ventino.m3u oluşturur."""
+    print(f"\n📁 '{github_folder}' klasöründe dosyalar oluşturuluyor...")
 
     # Klasörü oluştur (zaten varsa hata vermez)
     os.makedirs(github_folder, exist_ok=True)
 
+    # Bireysel dosyalar için şablon
     m3u8_template = """#EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:BANDWIDTH=5500000,AVERAGE-BANDWIDTH=8976000,RESOLUTION=1920x1080,CODECS="avc1.640028,mp4a.40.2",FRAME-RATE=25
 {stream_url}
 """
+    
+    # Ana liste için değişken ve dosya yolu
+    master_m3u_content = "#EXTM3U\n"
+    master_m3u_filename = os.path.join(github_folder, "ventino.m3u")
+
     created_files = 0
     for channel_id in CHANNEL_IDS:
-        # Stream URL'sini oluştur: base_video_url + channel_id + /index.m3u8
-        # Base URL'nin sonunda / olduğundan emin ol (get_base_url_from_page'de düzelttik)
         stream_url = f"{base_video_url}{channel_id}/index.m3u8"
-
-        # Dosya adı: channel_id + .m3u8 (örn: b1.m3u8)
         filename = os.path.join(github_folder, f"{channel_id}.m3u8")
 
+        # 1. Bireysel dosyayı oluştur
         try:
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(m3u8_template.format(stream_url=stream_url))
@@ -121,8 +123,21 @@ def create_m3u8_files(base_video_url, github_folder):
             created_files += 1
         except Exception as e:
             print(f"  ❌ {filename} oluşturulamadı: {e}")
+            
+        # 2. Ana liste için (ventino.m3u) içeriğe ekleme yap
+        channel_name = channel_id.capitalize() # Örneğin b1 -> B1, euro1 -> Euro1 yapar
+        master_m3u_content += f'#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="DeaTHLesS", {channel_name}\n'
+        master_m3u_content += f'{stream_url}\n'
 
-    print(f"\n🎉 İşlem tamam! {created_files} dosya oluşturuldu.")
+    # Toplu listeyi (ventino.m3u) kaydet
+    try:
+        with open(master_m3u_filename, 'w', encoding='utf-8') as f:
+            f.write(master_m3u_content)
+        print(f"\n🌟 Toplu kanal listesi başarıyla oluşturuldu: {master_m3u_filename}")
+    except Exception as e:
+        print(f"\n❌ {master_m3u_filename} oluşturulamadı: {e}")
+
+    print(f"\n🎉 İşlem tamam! {created_files} bireysel dosya ve 1 ana liste (ventino.m3u) oluşturuldu.")
 
 # --- ANA BOT ---
 def main():
@@ -134,14 +149,13 @@ def main():
         print("❌ Aktif domain bulunamadığı için işlem durduruldu.")
         return
 
-    # 2. Sayfa kaynağından base64'lü URL'yi bul (örnek bir kanal ile, b1 iyi)
+    # 2. Sayfa kaynağından base64'lü URL'yi bul
     base_video_url = get_base_url_from_page(active_domain, 'b1')
     if not base_video_url:
         print("❌ Video base URL'si alınamadığı için işlem durduruldu.")
-        # Belki başka bir kanal ID'si dene? Ama b1 genelde ana kanaldır.
         return
 
-    # 3. Tüm kanallar için .m3u8 dosyalarını oluştur
+    # 3. Tüm kanallar için dosyaları oluştur
     create_m3u8_files(base_video_url, GITHUB_FOLDER_NAME)
 
 if __name__ == "__main__":
