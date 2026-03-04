@@ -7,7 +7,7 @@ from requests.adapters import HTTPAdapter
 
 # --- KONFIGÜRASYON ---
 BASE_DOMAIN_PATTERN = "zeustv{}.com"
-START_INDEX = 229
+START_INDEX = 230
 END_INDEX = 500
 REQUEST_TIMEOUT = 5  # saniye
 GITHUB_FOLDER_NAME = "teyzeniyerim"
