@@ -2,7 +2,7 @@ name: Zeus TV Playlist Güncelleme
 
 on:
   schedule:
-    # Her 10 dakikada bir çalışır (GMT+3 için Türkiye saatiyle ayarlanmıştır)
+    # Her 10 dakikada bir çalışır
     - cron: '*/10 * * * *'
   workflow_dispatch:  # Manuel çalıştırmak için
 
@@ -16,13 +16,13 @@ jobs:
     - name: 📥 Repoyu klonla
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Tüm geçmişi getir (push için gerekli)
+        fetch-depth: 0  # Tüm geçmişi getir
     
     - name: 🐍 Python'u kur
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
-        cache: 'pip'  # pip cache'i hızlandırır
+        cache: 'pip'
     
     - name: 📦 Gerekli paketleri yükle
       run: |
@@ -31,9 +31,8 @@ jobs:
         
     - name: 🤖 Zeus botunu çalıştır
       id: run_bot
-      continue-on-error: true  # Hata olsa bile devam et
+      continue-on-error: true
       run: |
-        # Python dosyasının adının zeus_bot.py olduğundan emin ol
         python zeus_bot.py > bot_output.log 2>&1
         echo "status=$?" >> $GITHUB_OUTPUT
     
@@ -48,8 +47,8 @@ jobs:
     - name: 🔍 Değişiklikleri kontrol et
       id: check_changes
       run: |
-        # Bu komut teyzeniyerim klasöründeki m3u8'leri VE ventino.m3u dosyasını otomatik algılar
-        git add teyzeniyerim/
+        # Hem klasörü hem de ana dizindeki ventino.m3u dosyasını ekle
+        git add teyzeniyerim/ ventino.m3u
         
         # Değişiklik var mı kontrol et
         if git diff --staged --quiet; then
@@ -69,7 +68,7 @@ jobs:
         echo "📊 Değişen dosya sayısı: $CHANGED_FILES"
         echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
         
-        # Aktif domain ve kanal sayısını bul
+        # Aktif domaini bul
         if [ -f "bot_output.log" ]; then
           ACTIVE_DOMAIN=$(grep "Aktif domain bulundu" bot_output.log | tail -1 | grep -oP 'https?://[^\s]+')
           echo "active_domain=$ACTIVE_DOMAIN" >> $GITHUB_OUTPUT
@@ -89,7 +88,6 @@ jobs:
           ACTIVE_INFO=" - Domain: ${{ steps.stats.outputs.active_domain }}"
         fi
         
-        # Commit mesajında ana dosyanın da güncellendiğini belirtiyoruz
         git commit -m "🔄 M3U8 listesi ve ventino.m3u güncellendi $TIMESTAMP$ACTIVE_INFO"
         git push
     
@@ -99,7 +97,7 @@ jobs:
         echo "## ✅ Playlist Başarıyla Güncellendi! 🎉" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "- 📅 Zaman: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
-        echo "- 📊 Değişen dosya: ${{ steps.stats.outputs.files }} (Tekil kanallar + ventino.m3u)" >> $GITHUB_STEP_SUMMARY
+        echo "- 📊 Değişen dosya: ${{ steps.stats.outputs.files }}" >> $GITHUB_STEP_SUMMARY
         echo "- 🌐 Aktif domain: ${{ steps.stats.outputs.active_domain }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "Tüm değişiklikler repository'ye pushlandı." >> $GITHUB_STEP_SUMMARY
@@ -109,7 +107,7 @@ jobs:
       run: |
         echo "### ℹ️ Güncelleme Gerekmiyor" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Son kontrolde playlist'lerde değişiklik bulunamadı. Domain hala aktif ve listeler güncel." >> $GITHUB_STEP_SUMMARY
+        echo "Son kontrolde playlist'lerde değişiklik bulunamadı. Domain hala aktif ve aynı." >> $GITHUB_STEP_SUMMARY
         echo "- 📅 Kontrol zamanı: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
     
     - name: ❌ Hata durumu bildirimi
@@ -121,5 +119,5 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
         cat bot_output.log >> $GITHUB_STEP_SUMMARY || echo "Log dosyası bulunamadı" >> $GITHUB_STEP_SUMMARY
-        echo '```' >> $GITHUB_STEP_SUMMARY
-        
+        echo '```' >> $GITHUB_STEP_SUMMAR
+        Y
