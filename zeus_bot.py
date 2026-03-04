@@ -166,6 +166,5 @@ def main():
     
     print("\n🚀 Tüm işlemler sorunsuz tamamlandı!")
 
-if __name__ == "__
-main__":
+if __name__ == "__main__":
     main()
