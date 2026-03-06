@@ -365,7 +365,7 @@ def get_renconnect_content():
     print("🔍 RenConnect Domain aranıyor (26-100)...")
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(check_site, i) for i in range(25, 101)]
+        futures = [executor.submit(check_site, i) for i in range(26, 101)]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result:
