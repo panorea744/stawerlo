@@ -2,8 +2,6 @@ import requests
 import base64
 import re
 import os
-from urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
 
 # --- KONFIGÜRASYON ---
 BASE_DOMAIN_PATTERN = "zeustv{}.com"
@@ -13,7 +11,7 @@ REQUEST_TIMEOUT = 5  # saniye
 GITHUB_FOLDER_NAME = "teyzeniyerim"
 MASTER_M3U_FILENAME = "ventino.m3u" # Tekli ana oynatma listesi dosya adı
 
-# Kanalların ID listesi (verdiğin listeden)
+# Kanalların ID listesi
 CHANNEL_IDS = [
     'b1', 'b1local', 'b2', 'b3', 'b4', 'bein5', 'b1max', 'b2max',
     's1', 's2', 'smart1', 'smart2', 'tivibu', 'tivibu1', 'tivibu2', 'tivibu3',
@@ -21,47 +19,21 @@ CHANNEL_IDS = [
     'tabii4', 'tabii5', 'tabii6', 'xexxen', 'xexxen1'
 ]
 
-# --- 1. FONKSİYON: AKTİF DOMAİNİ BUL ---
-def find_active_domain():
-    """229'dan 500'e kadar domainleri dener, ilk aktif olanın tam URL'sini döndürür."""
-    print(f"🔍 {BASE_DOMAIN_PATTERN.format(START_INDEX)} ile {BASE_DOMAIN_PATTERN.format(END_INDEX)} arasında aktif domain taranıyor...")
-    for i in range(START_INDEX, END_INDEX + 1):
-        domain = BASE_DOMAIN_PATTERN.format(i)
-        url = f"https://{domain}/"
-        try:
-            # Sadece başlığı kontrol et, hızlı olsun
-            response = requests.get(url, timeout=REQUEST_TIMEOUT, allow_redirects=True)
-            if response.status_code == 200:
-                print(f"✅ Aktif domain bulundu: {url}")
-                return url.rstrip('/')  # Sonundaki slash'i temizle
-            else:
-                print(f"  {domain} yanıt verdi ama aktif değil (Status: {response.status_code})")
-        except requests.ConnectionError:
-            # Bağlantı hatası (domain aktif değil) sessizce geç
-            pass
-        except requests.Timeout:
-            print(f"  {domain} zaman aşımına uğradı.")
-        except Exception as e:
-            print(f"  {domain} kontrol edilirken hata: {e}")
-
-    print("❌ Hiçbir aktif domain bulunamadı.")
-    return None
-
-# --- 2. FONKSİYON: SAYFA KAYNAĞINDAN BASE64'Ü BUL VE ÇÖZ ---
+# --- 1. FONKSİYON: SAYFA KAYNAĞINDAN BASE64'Ü BUL VE ÇÖZ ---
 def get_base_url_from_page(active_domain, channel_id='b1'):
     """Belirtilen kanal sayfasına gidip, sayfa kaynağından base64 kodu bulup çözer."""
     page_url = f"{active_domain}/ch.html?id={channel_id}"
     print(f"  📄 Sayfa kaynağı inceleniyor: {page_url}")
     try:
         response = requests.get(page_url, timeout=10)
-        response.raise_for_status()  # 200 OK değilse hata fırlat
+        response.raise_for_status()
         html_content = response.text
 
-        # Base64 kodunu bul (genellikle atob() içinde veya bir değişkende)
+        # Base64 kodunu bul
         patterns = [
-            r'atob\("([A-Za-z0-9+/=]+)"\)',  # En yaygın: atob("base64...")
-            r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"',  # var _0x2a1 = "base64..."
-            r'src="([A-Za-z0-9+/=]+)"'  # Bazen direkt src'te olabilir (daha az olası)
+            r'atob\("([A-Za-z0-9+/=]+)"\)', 
+            r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"', 
+            r'src="([A-Za-z0-9+/=]+)"'
         ]
 
         base64_string = None
@@ -74,10 +46,8 @@ def get_base_url_from_page(active_domain, channel_id='b1'):
 
         if base64_string:
             try:
-                # Base64'ü çöz (standart base64)
                 decoded_bytes = base64.b64decode(base64_string)
                 decoded_url = decoded_bytes.decode('utf-8')
-                # URL düzgün değilse (örneğin sonunda / yoksa) düzelt
                 if not decoded_url.endswith('/'):
                     decoded_url += '/'
                 print(f"    ✅ Çözülen URL: {decoded_url}")
@@ -93,11 +63,43 @@ def get_base_url_from_page(active_domain, channel_id='b1'):
         print(f"    ❌ Sayfaya erişilemedi: {e}")
         return None
 
+# --- 2. FONKSİYON: AKTİF VE İÇİ DOLU DOMAİNİ BUL ---
+def find_working_domain_and_url():
+    """Domainleri dener, aktif olanı bulur ve içinden geçerli URL'yi çıkarana kadar devam eder."""
+    print(f"🔍 {BASE_DOMAIN_PATTERN.format(START_INDEX)} ile {BASE_DOMAIN_PATTERN.format(END_INDEX)} arasında aktif domain taranıyor...")
+    
+    for i in range(START_INDEX, END_INDEX + 1):
+        domain = BASE_DOMAIN_PATTERN.format(i)
+        url = f"https://{domain}"
+        
+        try:
+            response = requests.get(url + "/", timeout=REQUEST_TIMEOUT, allow_redirects=True)
+            if response.status_code == 200:
+                print(f"\n✅ Aktif domain bulundu: {url}")
+                # Domain aktif, hemen kaynağı kontrol et
+                base_video_url = get_base_url_from_page(url, 'b1')
+                
+                # Eğer kod sayfadan başarılı bir şekilde çekildiyse döngüyü kır ve dön
+                if base_video_url:
+                    return url, base_video_url
+                else:
+                    print(f"  ⚠️ Domain aktif ama aranan kod yok! Bir sonraki domaine geçiliyor...\n")
+            else:
+                pass # Status code 200 değilse sessizce geç veya print at
+                
+        except requests.ConnectionError:
+            pass
+        except requests.Timeout:
+            pass
+        except Exception as e:
+            pass
+
+    print("❌ Gerekli kodu içeren hiçbir aktif domain bulunamadı.")
+    return None, None
+
 # --- 3. FONKSİYON: TÜM KANALLAR İÇİN AYRI .m3u8 DOSYALARINI OLUŞTUR ---
 def create_m3u8_files(base_video_url, github_folder):
-    """Verilen base video URL'sini kullanarak her kanal için ayrı bir .m3u8 dosyası oluşturur."""
     print(f"\n📁 '{github_folder}' klasöründe .m3u8 dosyaları oluşturuluyor...")
-
     os.makedirs(github_folder, exist_ok=True)
 
     m3u8_template = """#EXTM3U
@@ -121,20 +123,13 @@ def create_m3u8_files(base_video_url, github_folder):
 
 # --- 4. FONKSİYON: TEK BİR ANA .m3u DOSYASI OLUŞTUR ---
 def create_master_m3u(base_video_url):
-    """Tüm kanalları içeren tek bir ventino.m3u dosyası oluşturur (her seferinde sıfırdan)."""
     print(f"\n📋 '{MASTER_M3U_FILENAME}' dosyası sıfırdan oluşturuluyor...")
-    
     try:
-        # 'w' modu dosya varsa içini siler ve sıfırdan yazar
         with open(MASTER_M3U_FILENAME, 'w', encoding='utf-8') as f:
             f.write("#EXTM3U\n")
-            
             for channel_id in CHANNEL_IDS:
                 stream_url = f"{base_video_url}{channel_id}/index.m3u8"
-                # Kanal ismini IPTV oynatıcılarda daha şık durması için büyük harf yapıyoruz
                 channel_name = channel_id.upper()
-                
-                # M3U formatına uygun şekilde logo, grup başlığı ve kanal ismini yazdırıyoruz
                 f.write(f'#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="DeaTHLesS", {channel_name}\n')
                 f.write(f'{stream_url}\n')
                 
@@ -146,22 +141,17 @@ def create_master_m3u(base_video_url):
 def main():
     print("🤖 Zeus TV M3U8 Botu Başlıyor...\n")
 
-    # 1. Aktif domaini bul
-    active_domain = find_active_domain()
-    if not active_domain:
-        print("❌ Aktif domain bulunamadığı için işlem durduruldu.")
-        return
-
-    # 2. Sayfa kaynağından base64'lü URL'yi bul
-    base_video_url = get_base_url_from_page(active_domain, 'b1')
+    # 1. Artık hem aktif domaini hem de çalışan url'yi aynı anda arıyoruz
+    active_domain, base_video_url = find_working_domain_and_url()
+    
     if not base_video_url:
         print("❌ Video base URL'si alınamadığı için işlem durduruldu.")
         return
 
-    # 3. Tüm kanallar için ayrı .m3u8 dosyalarını klasöre oluştur
+    # 2. Tüm kanallar için ayrı .m3u8 dosyalarını klasöre oluştur
     create_m3u8_files(base_video_url, GITHUB_FOLDER_NAME)
     
-    # 4. Tüm kanalları içeren tekli ana m3u dosyasını oluştur
+    # 3. Tüm kanalları içeren tekli ana m3u dosyasını oluştur
     create_master_m3u(base_video_url)
     
     print("\n🚀 Tüm işlemler sorunsuz tamamlandı!")
