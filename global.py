@@ -381,7 +381,6 @@ def get_renconnect_content():
 
     try:
         r = requests.get(active_site, headers=headers, timeout=10, verify=False)
-        # S Sport 1 (id=607) şablonunu yakala
         player_match = re.search(r'data-stream="(https://([^/]+)/player/player\.php\?id=607)"', r.text)
         
         if not player_match:
@@ -396,7 +395,6 @@ def get_renconnect_content():
         p_headers["Referer"] = active_site
         r_player = requests.get(player_url, headers=p_headers, timeout=10, verify=False)
         
-        # m3u8 ara (Düz veya Base64)
         m3u8_link = None
         plain_match = re.search(r'["\'](http[s]?://[^"\']+\.m3u8[^"\']*)["\']', r_player.text)
         
@@ -427,9 +425,113 @@ def get_renconnect_content():
 
     return results
 
+# --- 7. BONUS TV (ZEUS) LOGIC ---
+def get_bonus_content():
+    print("--- 📡 7. Bonus TV (Zeus) Taranıyor ---")
+    results = []
+    
+    BASE_DOMAIN_PATTERN = "zeustv{}.com"
+    START_INDEX = 233
+    END_INDEX = 500
+    
+    CHANNELS = {
+        'b1': 'beIN Spor 1',
+        'b1local': 'beIN Spor 1 YDK',
+        'b2': 'beIN Spor 2',
+        'b3': 'beIN Spor 3',
+        'b4': 'beIN Spor 4',
+        'b5': 'beIN Spor 5',
+        'b1max': 'beIN Max 1',
+        'b2max': 'beIN Max 2',
+        's1': 'S Spor 1',
+        's2': 'S Spor 2',
+        'smart1': 'Smart Spor 1',
+        'smart2': 'Smart Spor 2',
+        'tivibu': 'Tivibu Spor',
+        'tivibu1': 'Tivibu Spor 1',
+        'tivibu2': 'Tivibu Spor 2',
+        'tivibu3': 'Tivibu Spor 3',
+        'euro1': 'Euro Spor 1',
+        'euro2': 'Euro Spor 2',
+        'sifirtv': 'Sıfırtv'
+    }
+
+    def check_site(index):
+        url = f"https://{BASE_DOMAIN_PATTERN.format(index)}"
+        try:
+            r = requests.get(url + "/", headers=HEADERS, timeout=5, verify=False, allow_redirects=True)
+            if r.status_code == 200:
+                return url
+        except:
+            return None
+        return None
+
+    def get_base_url_from_page(active_domain):
+        page_url = f"{active_domain}/ch.html?id=b1"
+        try:
+            response = requests.get(page_url, headers=HEADERS, timeout=10, verify=False)
+            response.raise_for_status()
+            html_content = response.text
+
+            patterns = [
+                r'atob\("([A-Za-z0-9+/=]+)"\)', 
+                r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"', 
+                r'src="([A-Za-z0-9+/=]+)"'
+            ]
+
+            base64_string = None
+            for pattern in patterns:
+                match = re.search(pattern, html_content)
+                if match:
+                    base64_string = match.group(1)
+                    break
+
+            if base64_string:
+                try:
+                    decoded_bytes = base64.b64decode(base64_string)
+                    decoded_url = decoded_bytes.decode('utf-8')
+                    if not decoded_url.endswith('/'):
+                        decoded_url += '/'
+                    return decoded_url
+                except:
+                    pass
+        except:
+            pass
+        return None
+
+    active_url = None
+    print(f"🔍 Bonus TV Domain aranıyor ({START_INDEX}-{END_INDEX})...")
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
+        futures = [executor.submit(check_site, i) for i in range(START_INDEX, END_INDEX + 1)]
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
+            if result:
+                active_url = result
+                executor.shutdown(wait=False, cancel_futures=True)
+                break
+                
+    if not active_url:
+        print("❌ Bonus TV: Aktif domain bulunamadı.")
+        return results
+        
+    print(f"✅ Bonus TV Domain: {active_url}")
+    
+    base_video_url = get_base_url_from_page(active_url)
+    if not base_video_url:
+        print("❌ Bonus TV: Video base URL'si alınamadı.")
+        return results
+
+    for channel_id, channel_name in CHANNELS.items():
+        stream_url = f"{base_video_url}{channel_id}/index.m3u8"
+        entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Bonustv", {channel_name}\n{stream_url}'
+        results.append(entry)
+
+    return results
+
 # --- MAIN EXECUTION ---
 def main():
-    print("🚀 DeaTHLesS-Bot IPTV Oluşturucu v3.0 (6 Panel) Başlatılıyor...")
+    print("🚀 DeaTHLesS-Bot IPTV Oluşturucu v3.0 (7 Panel) Başlatılıyor...")
     
     all_content = ["#EXTM3U"]
     
@@ -445,6 +547,8 @@ def main():
     all_content.extend(get_xsport_content())
     # 6. RenConnect
     all_content.extend(get_renconnect_content())
+    # 7. Bonus TV (Zeus)
+    all_content.extend(get_bonus_content())
     
     # Write
     try:
@@ -466,4 +570,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
