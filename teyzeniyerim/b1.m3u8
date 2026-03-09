@@ -1,4 +1,3 @@
 #EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-STREAM-INF:BANDWIDTH=2000000
+#EXTINF:-1, Canli TV
 https://zeustv432423.info/b1/index.m3u8
