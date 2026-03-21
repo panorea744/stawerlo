@@ -1,6 +1,5 @@
 import requests
 import re
-import sys
 import urllib.parse
 import urllib3
 import time
@@ -58,8 +57,9 @@ channels = {
     "inci-taneleri": "UCUxSoTMNflf9TAlZbml7XMw"
 }
 
-max_retries = 10
-wait_time = 15
+# Hızlı hata alıp geçmesi için değerleri çok düşürdük
+max_retries = 2
+wait_time = 3
 folder_name = "noutube"
 
 os.makedirs(folder_name, exist_ok=True)
@@ -71,28 +71,29 @@ for name, live_id in channels.items():
     for attempt in range(1, max_retries + 1):
         try:
             headers1 = {
-                "User-Agent": "Mozilla/5.0 (SMART-TV; LINUX; Tizen 6.0)"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
             }
-            response1 = requests.get("https://ytdlp.online/", headers=headers1, verify=False, timeout=15)
+            # Timeout süresini 10 saniyeye çektik
+            response1 = requests.get("https://ytdlp.online/", headers=headers1, verify=False, timeout=10)
 
             if "session" not in response1.cookies:
+                print(f"  -> {attempt}. deneme: Session alinamadi. HTTP Kodu: {response1.status_code}")
                 time.sleep(wait_time)
                 continue
 
             token = response1.cookies.get("session")
-
             youtube_link = f"https://www.youtube.com/channel/{live_id}/live"
             encoded_command = urllib.parse.quote(f"--get-url {youtube_link}")
             stream_url = f"https://ytdlp.online/stream?command={encoded_command}"
 
             headers2 = {
-                "User-Agent": "Mozilla/5.0 (SMART-TV; LINUX; Tizen 6.0)",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
                 "Accept": "text/event-stream",
                 "Referer": "https://ytdlp.online/",
                 "Cookie": f"session={token}"
             }
 
-            response2 = requests.get(stream_url, headers=headers2, verify=False, timeout=20)
+            response2 = requests.get(stream_url, headers=headers2, verify=False, timeout=10)
             text = response2.text
 
             manifest_match = re.search(r'data:\s*(https://manifest\.googlevideo\.com[^\s]+)', text)
@@ -108,14 +109,16 @@ for name, live_id in channels.items():
                 print(f"[{name}] basariyla eklendi.")
                 success = True
                 break
+            else:
+                print(f"  -> {attempt}. deneme: Manifest linki bulunamadi.")
                 
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  -> {attempt}. deneme hatasi: {e}")
         
         if attempt < max_retries:
             time.sleep(wait_time)
     
     if not success:
-        print(f"[{name}] icin link bulunamadi, geciliyor.")
+        print(f"[{name}] Hata sebebiyle gecildi.\n")
 
 print("Tum islemler tamamlandi.")
