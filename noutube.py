@@ -1,13 +1,9 @@
-import requests
-import re
-import urllib.parse
-import urllib3
+import yt_dlp
 import time
 import os
+import subprocess
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-channels = {
+CHANNELS = {
     "Kemal-sunal": "UCoIUysIrvGxoDw-GkdOGjRw",
     "avrupa-yakasi": "UCgc3VJYdM_R8oKGRuXxUbKQ",
     "Trfilmler": "UCmw7e_6j2TSWCKeaZALjyuA",
@@ -57,68 +53,83 @@ channels = {
     "inci-taneleri": "UCUxSoTMNflf9TAlZbml7XMw"
 }
 
-# Hızlı hata alıp geçmesi için değerleri çok düşürdük
-max_retries = 2
-wait_time = 3
-folder_name = "noutube"
+OUTPUT_DIR = "noutube"
 
-os.makedirs(folder_name, exist_ok=True)
+def get_m3u8(channel_id, retries=5):
+    url = f"https://www.youtube.com/channel/{channel_id}/live"
 
-for name, live_id in channels.items():
-    print(f"[{name}] isleniyor...")
-    success = False
-    
-    for attempt in range(1, max_retries + 1):
+    ydl_opts = {
+        "quiet": True,
+        "no_warnings": True,
+        "format": "best",
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["android"]
+            }
+        },
+        "http_headers": {
+            "User-Agent": "com.google.android.youtube/17.31.35"
+        }
+    }
+
+    for _ in range(retries):
         try:
-            headers1 = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            }
-            # Timeout süresini 10 saniyeye çektik
-            response1 = requests.get("https://ytdlp.online/", headers=headers1, verify=False, timeout=10)
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
 
-            if "session" not in response1.cookies:
-                print(f"  -> {attempt}. deneme: Session alinamadi. HTTP Kodu: {response1.status_code}")
-                time.sleep(wait_time)
-                continue
+                if "url" in info:
+                    return info["url"]
 
-            token = response1.cookies.get("session")
-            youtube_link = f"https://www.youtube.com/channel/{live_id}/live"
-            encoded_command = urllib.parse.quote(f"--get-url {youtube_link}")
-            stream_url = f"https://ytdlp.online/stream?command={encoded_command}"
+                if "formats" in info:
+                    for f in info["formats"]:
+                        if f.get("protocol") == "m3u8":
+                            return f.get("url")
+        except:
+            pass
 
-            headers2 = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                "Accept": "text/event-stream",
-                "Referer": "https://ytdlp.online/",
-                "Cookie": f"session={token}"
-            }
+        time.sleep(2)
 
-            response2 = requests.get(stream_url, headers=headers2, verify=False, timeout=10)
-            text = response2.text
+    return None
 
-            manifest_match = re.search(r'data:\s*(https://manifest\.googlevideo\.com[^\s]+)', text)
 
-            if manifest_match:
-                final_link = manifest_match.group(1).strip()
-                m3u8_content = f"#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720\n{final_link}"
+def write_m3u8(name, m3u8_url):
+    path = os.path.join(OUTPUT_DIR, f"{name}.m3u8")
 
-                file_path = os.path.join(folder_name, f"{name}.m3u8")
-                with open(file_path, "w", encoding="utf-8") as f:
-                    f.write(m3u8_content)
-                
-                print(f"[{name}] basariyla eklendi.")
-                success = True
-                break
-            else:
-                print(f"  -> {attempt}. deneme: Manifest linki bulunamadi.")
-                
-        except Exception as e:
-            print(f"  -> {attempt}. deneme hatasi: {e}")
-        
-        if attempt < max_retries:
-            time.sleep(wait_time)
-    
-    if not success:
-        print(f"[{name}] Hata sebebiyle gecildi.\n")
+    content = f"""#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720
+{m3u8_url}
+"""
 
-print("Tum islemler tamamlandi.")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
+def git_push():
+    try:
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(["git", "commit", "-m", "update m3u8"], check=True)
+        subprocess.run(["git", "push"], check=True)
+    except:
+        pass
+
+
+def main():
+    if not os.path.exists(OUTPUT_DIR):
+        os.makedirs(OUTPUT_DIR)
+
+    for name, channel_id in CHANNELS.items():
+        print(f"Checking: {name}")
+        m3u8 = get_m3u8(channel_id)
+
+        if m3u8:
+            write_m3u8(name, m3u8)
+            print(f"Saved: {name}")
+        else:
+            print(f"Failed: {name}")
+
+    git_push()
+
+
+if __name__ == "__main__":
+    main()
