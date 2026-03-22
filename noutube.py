@@ -2,6 +2,10 @@ import base64
 import os
 import re
 import requests
+import urllib3
+
+# SSL uyarılarını bastır
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ENCRYPTED_URL = "aHR0cHM6Ly95dHViZS13YXJzLm15d2lyZS5vcmcvbm91dHViZS9wbGF5bGlzdC5tM3U="
 
@@ -14,7 +18,8 @@ def decrypt_url():
     return decrypted_bytes.decode("utf-8")
 
 def fetch_playlist(url):
-    response = requests.get(url)
+    # SSL doğrulamasını kapat
+    response = requests.get(url, verify=False)
     response.raise_for_status()
     return response.text
 
