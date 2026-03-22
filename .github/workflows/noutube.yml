@@ -1,36 +1,33 @@
-name: Auto Update M3U8
+name: noutube updater
 
 on:
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: "0 */3 * * *"
   workflow_dispatch:
 
 jobs:
-  update-m3u8:
+  update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout repository
+      - name: repo klonla
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: python kur
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install requests urllib3
+      - name: bağımlılıkları kur
+        run: pip install yt-dlp
 
-      - name: Run noutube.py
+      - name: script çalıştır
         run: python noutube.py
 
-      - name: Commit and Push Changes
+      - name: commit at
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add noutube/
-          git commit -m "M3U8 listesi güncellendi" || echo "Değişiklik yok"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "auto update m3u8"
           git push
-          
