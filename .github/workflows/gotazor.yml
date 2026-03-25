@@ -21,5 +21,4 @@ jobs:
           pip install selenium
           
       - name: Run script
-        run: python gotazor.p
-        y
+        run: python gotazor.py
