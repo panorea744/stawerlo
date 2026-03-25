@@ -7,7 +7,6 @@ import concurrent.futures
 import base64
 from bs4 import BeautifulSoup
 
-# --- AYARLAR ---
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore')
 
@@ -20,7 +19,6 @@ PROXY_URL = "https://seep.eu.org/"
 OUTPUT_FILENAME = "DeaTHLesS-Bot-iptv.m3u"
 STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
 
-# --- 1. SELCUK SPORTS LOGIC ---
 SELCUK_NAMES = {
     "sbeinsports-1": "beIN Sports 1", "selcukobs1": "beIN Sports 1", "selcukbeinsports1": "beIN Sports 1",
     "selcukbeinsports2": "beIN Sports 2", "selcukbeinsports3": "beIN Sports 3",
@@ -38,7 +36,7 @@ SELCUK_NAMES = {
 SELCUK_REFERRER = "https://selcuksportshd1903.xyz"
 
 def get_selcuk_content():
-    print("--- 📡 1. Selçuk Sports Taranıyor ---")
+    print("--- 1. Selcuk Sports ---")
     results = []
     
     def get_html_proxy(url):
@@ -69,7 +67,7 @@ def get_selcuk_content():
         if link_match: active_domain = link_match.group(1).strip().rstrip('/')
 
     if not active_domain: return results
-    print(f"✅ Selcuk Domain: {active_domain}")
+    print(f"Selcuk Domain: {active_domain}")
     
     domain_html = get_html_direct(active_domain)
     if not domain_html: return results
@@ -104,12 +102,11 @@ def get_selcuk_content():
         
         for cid, name in SELCUK_NAMES.items():
             link = f"{base_stream_url}{cid}/playlist.m3u8"
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selçuk-Panel", {name}\n#EXTVLCOPT:http-referrer={SELCUK_REFERRER}\n{link}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selcuk-Panel", {name}\n#EXTVLCOPT:http-referrer={SELCUK_REFERRER}\n{link}'
             results.append(entry)
     
     return results
 
-# --- 2. ATOM SPOR LOGIC ---
 ATOM_CHANNELS = [
     ("bein-sports-1", "beIN Sports 1"), ("bein-sports-2", "beIN Sports 2"),
     ("bein-sports-3", "beIN Sports 3"), ("bein-sports-4", "beIN Sports 4"),
@@ -120,7 +117,7 @@ ATOM_CHANNELS = [
 ]
 
 def get_atom_content():
-    print("--- 📡 2. Atom Spor Taranıyor ---")
+    print("--- 2. Atom Spor ---")
     results = []
     start_url = "https://url24.link/AtomSporTV"
     headers = HEADERS.copy()
@@ -134,7 +131,7 @@ def get_atom_content():
             r2 = requests.get(loc, headers=headers, allow_redirects=False, timeout=10)
             if 'location' in r2.headers:
                 base_domain = r2.headers['location'].strip().rstrip('/')
-                print(f"✅ Atom Domain: {base_domain}")
+                print(f"Atom Domain: {base_domain}")
     except: pass
 
     for cid, name in ATOM_CHANNELS:
@@ -158,7 +155,6 @@ def get_atom_content():
         except: continue
     return results
 
-# --- 3. TRGOALS (STATIC) ---
 TRGOALS_STATIC_LIST = [
     ("TRGoals Ana", "https://spring-band-25c2.panorea1000.workers.dev/trgoals.m3u8"),
     ("beIN Sports 1 (Zirve)", "https://spring-band-25c2.panorea1000.workers.dev/zirve.m3u8"),
@@ -181,16 +177,15 @@ TRGOALS_STATIC_LIST = [
 ]
 
 def get_trgoals_content():
-    print("--- 📡 3. TRGoals Ekleniyor ---")
+    print("--- 3. TRGoals ---")
     results = []
     for name, url in TRGOALS_STATIC_LIST:
         entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="TRGoals-Panel", {name}\n{url}'
         results.append(entry)
     return results
 
-# --- 4. ANDRO PANEL ---
 def get_andro_content():
-    print("--- 📡 4. Andro Panel Taranıyor ---")
+    print("--- 4. Andro Panel ---")
     results = []
     PROXY = "https://proxy.freecdn.workers.dev/?url="
     START = "https://taraftariumizle.org"
@@ -270,9 +265,8 @@ def get_andro_content():
     
     return results
 
-# --- 5. XSPORT LOGIC ---
 def get_xsport_content():
-    print("--- 📡 5. XSport Taranıyor ---")
+    print("--- 5. XSport ---")
     results = []
     base_pattern = "https://www.xsportv{}.xyz/"
     headers = {
@@ -293,7 +287,6 @@ def get_xsport_content():
         except: return None
 
     def find_active_domain():
-        print("🔍 XSport Domain aranıyor (56-1000)...")
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
             futures = [executor.submit(check_domain, i) for i in range(56, 1000)]
             for future in concurrent.futures.as_completed(futures):
@@ -315,7 +308,7 @@ def get_xsport_content():
 
     domain = find_active_domain()
     if not domain: return results
-    print(f"✅ XSport Domain: {domain}")
+    print(f"XSport Domain: {domain}")
     
     try:
         response = requests.get(domain, headers=headers, timeout=10)
@@ -330,17 +323,15 @@ def get_xsport_content():
                     if "BEINSPORTS" in clean_name: clean_name = clean_name.replace("BEINSPORTS", "beIN Sports")
                     entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="XSport-Panel", {clean_name}\n#EXTVLCOPT:http-referer={domain}\n{final_url}'
                     results.append(entry)
-    except Exception as e:
-        print(f"❌ XSport Hata: {e}")
+    except: pass
     return results
 
-# --- 6. RENCONNECT (PALAZZO) LOGIC ---
 def get_renconnect_content():
-    print("--- 📡 6. RenConnect (Palazzo) Taranıyor ---")
+    print("--- 6. RenConnect (Palazzo) ---")
     results = []
     
     channels = [
-        ("600", "beIN Sports 1"), ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
+        ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
         ("603", "beIN Sports 3"), ("604", "beIN Sports 4"),
         ("605", "beIN Sports 5"), ("607", "S Sport 1"),
         ("608", "S Sport 2"), ("701", "Tivibu Spor 1"),
@@ -362,8 +353,6 @@ def get_renconnect_content():
         return None
 
     active_site = None
-    print("🔍 RenConnect Domain aranıyor (27-100)...")
-    
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         futures = [executor.submit(check_site, i) for i in range(27, 101)]
         for future in concurrent.futures.as_completed(futures):
@@ -374,40 +363,37 @@ def get_renconnect_content():
                 break
     
     if not active_site:
-        print("❌ RenConnect: Aktif site bulunamadı.")
+        print("RenConnect: Site not found.")
         return results
         
-    print(f"✅ RenConnect Domain: {active_site}")
+    print(f"RenConnect Domain: {active_site}")
 
     try:
         r = requests.get(active_site, headers=headers, timeout=10, verify=False)
-        player_match = re.search(r'data-stream="(https://([^/]+)/player/player\.php\?id=607)"', r.text)
+        player_match = re.search(r'"url":"(https?://([^/]+)/player/player2\.php\?[^"]*?id=607[^"]*)"', r.text)
         
         if not player_match:
-            print("❌ RenConnect: Şablon kanal (607) bulunamadı.")
+            print("RenConnect: Template channel (607) not found.")
             return results
 
-        player_url = player_match.group(1)
+        player_url = player_match.group(1).replace('\\/', '/')
         player_domain = player_match.group(2)
         referer_url = f"https://{player_domain}/"
 
         p_headers = headers.copy()
-        p_headers["Referer"] = active_site
+        p_headers["Origin"] = active_site
+        p_headers["Referer"] = active_site + "/"
         r_player = requests.get(player_url, headers=p_headers, timeout=10, verify=False)
         
         m3u8_link = None
-        plain_match = re.search(r'["\'](http[s]?://[^"\']+\.m3u8[^"\']*)["\']', r_player.text)
-        
-        if plain_match:
-            m3u8_link = plain_match.group(1).replace("\\/", "/")
-        else:
-            b64_match = re.search(r'atob\s*\(\s*["\']([^"\']+)["\']\s*\)', r_player.text)
-            if b64_match:
-                decoded = base64.b64decode(b64_match.group(1)).decode('utf-8')
-                m3u8_link = decoded
+        stream_match = re.search(r'const stream\s*=\s*atob\("(.*?)"\)', r_player.text)
+            
+        if stream_match:
+            decoded = base64.b64decode(stream_match.group(1)).decode('utf-8')
+            m3u8_link = decoded
 
         if not m3u8_link:
-            print("❌ RenConnect: m3u8 şablonu çözülemedi.")
+            print("RenConnect: m3u8 failed to decode.")
             return results
 
         m3u8_clean = m3u8_link.split('?')[0]
@@ -415,19 +401,15 @@ def get_renconnect_content():
         
         for cid, cname in channels:
             final_link = template_url.replace("{ID}", cid)
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {cname}\n#EXTVLCOPT:http-referrer={referer_url}\n{final_link}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Palazzo-Panel", {cname}\n#EXTVLCOPT:http-referrer={referer_url}\n{final_link}'
             results.append(entry)
-            
-        print(f"✅ RenConnect: {len(results)} kanal eklendi.")
 
-    except Exception as e:
-        print(f"❌ RenConnect Hata: {e}")
+    except: pass
 
     return results
 
-# --- 7. BONUS TV (ZEUS) LOGIC ---
 def get_bonus_content():
-    print("--- 📡 7. Bonus TV (Zeus) Taranıyor ---")
+    print("--- 7. Bonus TV (Zeus) ---")
     results = []
     
     BASE_DOMAIN_PATTERN = "zeustv{}.com"
@@ -435,24 +417,15 @@ def get_bonus_content():
     END_INDEX = 500
     
     CHANNELS = {
-        'b1': 'beIN Spor 1',
-        'b1local': 'beIN Spor 1 YDK',
-        'b2': 'beIN Spor 2',
-        'b3': 'beIN Spor 3',
-        'b4': 'beIN Spor 4',
-        'b5': 'beIN Spor 5',
-        'b1max': 'beIN Max 1',
-        'b2max': 'beIN Max 2',
-        's1': 'S Spor 1',
-        's2': 'S Spor 2',
-        'smart1': 'Smart Spor 1',
-        'smart2': 'Smart Spor 2',
-        'tivibu': 'Tivibu Spor',
-        'tivibu1': 'Tivibu Spor 1',
-        'tivibu2': 'Tivibu Spor 2',
-        'tivibu3': 'Tivibu Spor 3',
-        'euro1': 'Euro Spor 1',
-        'euro2': 'Euro Spor 2',
+        'b1': 'beIN Spor 1', 'b1local': 'beIN Spor 1 YDK',
+        'b2': 'beIN Spor 2', 'b3': 'beIN Spor 3',
+        'b4': 'beIN Spor 4', 'b5': 'beIN Spor 5',
+        'b1max': 'beIN Max 1', 'b2max': 'beIN Max 2',
+        's1': 'S Spor 1', 's2': 'S Spor 2',
+        'smart1': 'Smart Spor 1', 'smart2': 'Smart Spor 2',
+        'tivibu': 'Tivibu Spor', 'tivibu1': 'Tivibu Spor 1',
+        'tivibu2': 'Tivibu Spor 2', 'tivibu3': 'Tivibu Spor 3',
+        'euro1': 'Euro Spor 1', 'euro2': 'Euro Spor 2',
         'sifirtv': 'Sıfırtv'
     }
 
@@ -493,15 +466,11 @@ def get_bonus_content():
                     if not decoded_url.endswith('/'):
                         decoded_url += '/'
                     return decoded_url
-                except:
-                    pass
-        except:
-            pass
+                except: pass
+        except: pass
         return None
 
     active_url = None
-    print(f"🔍 Bonus TV Domain aranıyor ({START_INDEX}-{END_INDEX})...")
-    
     with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
         futures = [executor.submit(check_site, i) for i in range(START_INDEX, END_INDEX + 1)]
         for future in concurrent.futures.as_completed(futures):
@@ -511,16 +480,12 @@ def get_bonus_content():
                 executor.shutdown(wait=False, cancel_futures=True)
                 break
                 
-    if not active_url:
-        print("❌ Bonus TV: Aktif domain bulunamadı.")
-        return results
+    if not active_url: return results
         
-    print(f"✅ Bonus TV Domain: {active_url}")
+    print(f"Bonus TV Domain: {active_url}")
     
     base_video_url = get_base_url_from_page(active_url)
-    if not base_video_url:
-        print("❌ Bonus TV: Video base URL'si alınamadı.")
-        return results
+    if not base_video_url: return results
 
     for channel_id, channel_name in CHANNELS.items():
         stream_url = f"{base_video_url}{channel_id}/index.m3u8"
@@ -529,28 +494,18 @@ def get_bonus_content():
 
     return results
 
-# --- MAIN EXECUTION ---
 def main():
-    print("🚀 DeaTHLesS-Bot IPTV Oluşturucu v3.0 (7 Panel) Başlatılıyor...")
+    print("DeaTHLesS-Bot v3.0 Started...")
     
     all_content = ["#EXTM3U"]
-    
-    # 1. Selçuk
     all_content.extend(get_selcuk_content())
-    # 2. Atom
     all_content.extend(get_atom_content())
-    # 3. TRGoals
     all_content.extend(get_trgoals_content())
-    # 4. Andro
     all_content.extend(get_andro_content())
-    # 5. XSport
     all_content.extend(get_xsport_content())
-    # 6. RenConnect
     all_content.extend(get_renconnect_content())
-    # 7. Bonus TV (Zeus)
     all_content.extend(get_bonus_content())
     
-    # Write
     try:
         with open(OUTPUT_FILENAME, "w", encoding="utf-8") as f:
             f.write("\n".join(all_content))
@@ -558,15 +513,13 @@ def main():
         full_path = os.path.abspath(OUTPUT_FILENAME)
         total_channels = len(all_content) - 1
         
-        print("\n" + "="*50)
-        print(f"✅ İŞLEM TAMAMLANDI!")
-        print(f"💾 Dosya: {OUTPUT_FILENAME}")
-        print(f"📊 Toplam Kanal: {total_channels}")
-        print(f"📍 Yol: {full_path}")
-        print("="*50)
+        print("\nCompleted!")
+        print(f"File: {OUTPUT_FILENAME}")
+        print(f"Channels: {total_channels}")
+        print(f"Path: {full_path}")
         
     except IOError as e:
-        print(f"\n❌ Dosya yazma hatası: {e}")
+        print(f"\nError: {e}")
 
 if __name__ == "__main__":
     main()
