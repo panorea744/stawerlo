@@ -1,66 +1,54 @@
-import undetected_chromedriver as uc
-import re
+import json
 import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
-url = "https://benunluyumaskim.betconnectiframecdn1000.shop/player/player2.php?id=607"
+url = "https://palazzocanli27.com/"
 
-headers = {
-    "Origin": "https://benunluyumaskim.betconnectiframecdn1000.shop",
-    "Referer": "https://benunluyumaskim.betconnectiframecdn1000.shop/",
-    "sec-ch-ua": '"Chromium";v="146", "Not-A.Brand";v="24", "Android WebView";v="146"',
-    "sec-ch-ua-mobile": "?1",
-    "Accept": "*/*",
-    "sec-ch-ua-platform": '"Android"',
-    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36"
-}
-
-print(f"Starting undetected_chromedriver for: {url}")
-
-options = uc.ChromeOptions()
-options.add_argument("--headless")
+options = Options()
+options.add_argument("--headless=new")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-options.add_argument(f'--user-agent={headers["User-Agent"]}')
+options.add_argument("--mute-audio")
+
+# İşte IDM mantığı burada başlıyor: Ağ trafiğini dinleme yetkisi veriyoruz
+options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
+
+print(f"-> {url} adresine bağlanılıyor...")
+
+# Güncel Selenium (v4.6+) driver'ı kendisi indirir, sürüm hatası vermez
+driver = webdriver.Chrome(options=options)
 
 try:
-    driver = uc.Chrome(options=options)
-    
-    driver.execute_cdp_cmd('Network.enable', {})
-    driver.execute_cdp_cmd('Network.setExtraHTTPHeaders', {'headers': headers})
-
     driver.get(url)
-    
-    print("Waiting 10 seconds for Cloudflare challenge to pass...")
+    print("-> Sayfa yüklendi. Yayının başlaması ve ağ paketlerinin düşmesi için 10 saniye bekleniyor...")
     time.sleep(10)
 
-    page_source = driver.page_source
+    # Tarayıcının arkasında dönen tüm ağ trafiği kayıtlarını çekiyoruz
+    logs = driver.get_log("performance")
+    m3u8_linkleri = set()
 
-    if "Cloudflare" in page_source or "Just a moment" in page_source:
-        print("WARNING: Might be stuck on Cloudflare verification.")
+    for log in logs:
+        try:
+            log_json = json.loads(log["message"])["message"]
+            # Sadece "Giden Ağ İsteklerini" (Network.requestWillBeSent) filtrele
+            if log_json["method"] == "Network.requestWillBeSent":
+                request_url = log_json["params"]["request"]["url"]
+                # URL içinde .m3u8 geçiyorsa listeye ekle
+                if ".m3u8" in request_url:
+                    m3u8_linkleri.add(request_url)
+        except:
+            continue
 
-    m3u8_links = set(re.findall(r'(https?://[^\s"\'<>]*\.m3u8[^\s"\'<>]*)', page_source))
-    domains = set(re.findall(r'https?://([a-zA-Z0-9.-]+)', page_source))
-
-    print("\n--- FOUND M3U8 LINKS ---")
-    if m3u8_links:
-        for link in m3u8_links:
+    print("\n--- YAKALANAN M3U8 LİNKLERİ (IDM Mantığı) ---")
+    if m3u8_linkleri:
+        for link in m3u8_linkleri:
             print(link)
     else:
-        print("No direct .m3u8 link found.")
-
-    print("\n--- FOUND DOMAINS ---")
-    if domains:
-        for domain in domains:
-            print(domain)
-    else:
-        print("No other domains found.")
+        print("Ağ trafiğinde .m3u8 uzantılı bir link bulunamadı.")
 
 except Exception as e:
-    print(f"Error: {e}")
-
+    print(f"Hata oluştu: {e}")
 finally:
-    try:
-        driver.quit()
-    except:
-
-        pass
+    driv
+    er.quit()
