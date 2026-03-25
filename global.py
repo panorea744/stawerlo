@@ -401,7 +401,7 @@ def get_renconnect_content():
         
         for cid, cname in channels:
             final_link = template_url.replace("{ID}", cid)
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Palazzo-Panel", {cname}\n#EXTVLCOPT:http-referrer={referer_url}\n{final_link}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {cname}\n#EXTVLCOPT:http-referrer={referer_url}\n{final_link}'
             results.append(entry)
 
     except: pass
