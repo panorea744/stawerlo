@@ -1,41 +1,25 @@
-name: Gotazor Link Update
+name: Gotazor Manuel Calistirici
 
 on:
-  schedule:
-    # Her 10 dakikada bir otomatik çalışır
-    - cron: '*/10 * * * *'
   workflow_dispatch:
-    # GitHub arayüzünden manuel başlatma butonu sağlar
 
 jobs:
-  build:
+  run-gotazor:
     runs-on: ubuntu-latest
-    # Yazma izni verilmesi gerekir (Dosyaları güncelleyebilmesi için)
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          pip install requests
+          python -m pip install --upgrade pip
+          pip install undetected-chromedriver
 
-      - name: Run Gotazor Script
-        run: |
-          python gotazor.py
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          # gotazor klasörünü ve içindeki m3u8 dosyalarını ekle
-          git add gotazor/*.m3u8
-          # Değişiklik yoksa hata vermeden bitir, varsa pushla
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update links: $(date +'%d-%m-%Y %H:%M')" && git push)
+      - name: Run gotazor.py
+        run: python gotazor.py
