@@ -187,7 +187,7 @@ def get_trgoals_content():
 def get_andro_content():
     print("--- 4. Andro Panel ---")
     results = []
-    START = "https://mahsunsports.xyz/"
+    base_pattern = "https://mahsunsports{}.xyz"
     headers = HEADERS.copy()
     
     channels = [
@@ -212,46 +212,53 @@ def get_andro_content():
         ("androstreamliveexn8", 'TR:Exxen 8 HD')
     ]
 
-    def get_src(url, referer=None, retries=1):
-        for i in range(retries):
-            try:
-                temp_headers = headers.copy()
-                if referer: temp_headers['Referer'] = referer
-                # allow_redirects=True ile yeni alan adına yönlendirmeleri takip ediyoruz.
-                r = requests.get(url, headers=temp_headers, verify=False, timeout=15, allow_redirects=True)
-                if r.status_code == 200:
-                    return r.text, r.url
-            except Exception as e:
-                pass
-        return None, None
+    def check_domain(index):
+        url = base_pattern.format(index)
+        try:
+            response = requests.get(url, headers=headers, timeout=5, verify=False)
+            if response.status_code == 200:
+                return url
+        except:
+            return None
+        return None
 
-    # Yönlendirme ve erişim için 4 defa şans veriyoruz
-    h1_text, final_domain = get_src(START, retries=4)
-    if not h1_text:
-        print("Andro Panel: Siteye ulasilamadi.")
-        return results
+    print("Andro Panel icin aktif domain araniyor (10-99)...")
+    active_site = None
     
-    print(f"Andro Panel Guncel Domain: {final_domain}")
-    
-    # AMP kaldırıldığı için direkt ana sayfa (h1_text) içinde iframe arıyoruz
-    iframe_match = re.search(r'\[src\]="appState\.currentIframe".*?src="(https?://[^"]+)"', h1_text, re.DOTALL)
-    if not iframe_match:
-        print("Andro Panel: Iframe bulunamadi.")
-        return results
-    iframe_url = iframe_match.group(1)
-    
-    # Iframe içeriğini güncel domaini referer göstererek çekiyoruz
-    h2_text, _ = get_src(iframe_url, referer=final_domain)
-    if not h2_text: 
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        futures = [executor.submit(check_domain, i) for i in range(10, 100)]
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
+            if result:
+                active_site = result
+                executor.shutdown(wait=False, cancel_futures=True)
+                break
+
+    if not active_site:
+        print("Andro Panel: 10 ile 99 arasinda aktif site bulunamadi.")
         return results
         
-    baseurl_match = re.search(r'baseUrls\s*=\s*\[(.*?)\]', h2_text, re.DOTALL)
+    print(f"Andro Panel Guncel Domain Bulundu: {active_site}")
+    
+    event_url = f"{active_site}/event.html?id=androstreamlivebs1"
+    print(f"Event sayfasi kontrol ediliyor: {event_url}")
+    
+    try:
+        r2 = requests.get(event_url, headers=headers, verify=False, timeout=10)
+        h2_text = r2.text
+    except Exception as e:
+        print(f"Andro Panel: Event sayfasi alinamadi. Hata: {e}")
+        return results
+        
+    baseurl_match = re.search(r'baseurls\s*=\s*\[(.*?)\]', h2_text, re.DOTALL | re.IGNORECASE)
     if not baseurl_match: 
+        print("Andro Panel: baseurls dizisi event sayfasinda bulunamadi.")
         return results
         
     urls_text = baseurl_match.group(1).replace('"', '').replace("'", "").replace("\n", "").replace("\r", "")
     servers = [url.strip() for url in urls_text.split(',') if url.strip().startswith("http")]
     servers = list(set(servers))
+    print(f"Bulunan Sunucular: {servers}")
     
     active_servers = []
     test_id = "androstreamlivebs1"
@@ -260,19 +267,18 @@ def get_andro_content():
         test_url = f"{server}/{test_id}.m3u8" if "checklist" in server else f"{server}/checklist/{test_id}.m3u8"
         test_url = test_url.replace("checklist//", "checklist/")
         try:
-            temp_headers = headers.copy()
-            temp_headers['Referer'] = iframe_url
-            # Proxy olmadan direkt sunucuyu test ediyoruz
-            response = requests.get(test_url, headers=temp_headers, verify=False, timeout=5)
-            if response.status_code == 200: active_servers.append(server)
-        except: continue
+            temp_response = requests.get(test_url, headers={'Referer': active_site + "/"}, verify=False, timeout=5)
+            if temp_response.status_code == 200: 
+                active_servers.append(server)
+        except: 
+            continue
     
     for server in active_servers:
         server = server.rstrip('/')
         for cid, cname in channels:
             final_url = f"{server}/{cid}.m3u8" if "checklist" in server else f"{server}/checklist/{cid}.m3u8"
             final_url = final_url.replace("checklist//", "checklist/")
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Andro-Panel", {cname}\n#EXTVLCOPT:http-referrer={iframe_url}\n{final_url}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Andro-Panel", {cname}\n#EXTVLCOPT:http-referrer={active_site}/\n{final_url}'
             results.append(entry)
     
     return results
