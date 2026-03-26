@@ -187,8 +187,7 @@ def get_trgoals_content():
 def get_andro_content():
     print("--- 4. Andro Panel ---")
     results = []
-    PROXY = "https://proxy.freecdn.workers.dev/?url="
-    START = "https://mahsunsports.xyz"
+    START = "https://mahsunsports.xyz/"
     headers = HEADERS.copy()
     
     channels = [
@@ -213,31 +212,43 @@ def get_andro_content():
         ("androstreamliveexn8", 'TR:Exxen 8 HD')
     ]
 
-    def get_src(url, referer=None):
-        try:
-            temp_headers = headers.copy()
-            if referer: temp_headers['Referer'] = referer
-            r = requests.get(PROXY + url, headers=temp_headers, verify=False, timeout=20)
-            return r.text if r.status_code == 200 else None
-        except: return None
+    def get_src(url, referer=None, retries=1):
+        for i in range(retries):
+            try:
+                temp_headers = headers.copy()
+                if referer: temp_headers['Referer'] = referer
+                # allow_redirects=True ile yeni alan adına yönlendirmeleri takip ediyoruz.
+                r = requests.get(url, headers=temp_headers, verify=False, timeout=15, allow_redirects=True)
+                if r.status_code == 200:
+                    return r.text, r.url
+            except Exception as e:
+                pass
+        return None, None
 
-    h1 = get_src(START)
-    if not h1: return results
-    soup = BeautifulSoup(h1, 'html.parser')
-    amp_link = soup.find('link', rel='amphtml')
-    if not amp_link: return results
-    amp_url = amp_link.get('href')
+    # Yönlendirme ve erişim için 4 defa şans veriyoruz
+    h1_text, final_domain = get_src(START, retries=4)
+    if not h1_text:
+        print("Andro Panel: Siteye ulasilamadi.")
+        return results
     
-    h2 = get_src(amp_url)
-    if not h2: return results
-    iframe_match = re.search(r'\[src\]="appState\.currentIframe".*?src="(https?://[^"]+)"', h2, re.DOTALL)
-    if not iframe_match: return results
+    print(f"Andro Panel Guncel Domain: {final_domain}")
+    
+    # AMP kaldırıldığı için direkt ana sayfa (h1_text) içinde iframe arıyoruz
+    iframe_match = re.search(r'\[src\]="appState\.currentIframe".*?src="(https?://[^"]+)"', h1_text, re.DOTALL)
+    if not iframe_match:
+        print("Andro Panel: Iframe bulunamadi.")
+        return results
     iframe_url = iframe_match.group(1)
     
-    h3 = get_src(iframe_url, referer=amp_url)
-    if not h3: return results
-    baseurl_match = re.search(r'baseUrls\s*=\s*\[(.*?)\]', h3, re.DOTALL)
-    if not baseurl_match: return results
+    # Iframe içeriğini güncel domaini referer göstererek çekiyoruz
+    h2_text, _ = get_src(iframe_url, referer=final_domain)
+    if not h2_text: 
+        return results
+        
+    baseurl_match = re.search(r'baseUrls\s*=\s*\[(.*?)\]', h2_text, re.DOTALL)
+    if not baseurl_match: 
+        return results
+        
     urls_text = baseurl_match.group(1).replace('"', '').replace("'", "").replace("\n", "").replace("\r", "")
     servers = [url.strip() for url in urls_text.split(',') if url.strip().startswith("http")]
     servers = list(set(servers))
@@ -251,7 +262,8 @@ def get_andro_content():
         try:
             temp_headers = headers.copy()
             temp_headers['Referer'] = iframe_url
-            response = requests.get(PROXY + test_url, headers=temp_headers, verify=False, timeout=5)
+            # Proxy olmadan direkt sunucuyu test ediyoruz
+            response = requests.get(test_url, headers=temp_headers, verify=False, timeout=5)
             if response.status_code == 200: active_servers.append(server)
         except: continue
     
