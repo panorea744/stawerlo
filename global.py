@@ -188,7 +188,7 @@ def get_andro_content():
     print("--- 4. Andro Panel ---")
     results = []
     PROXY = "https://proxy.freecdn.workers.dev/?url="
-    START = "https://taraftariumizle.org"
+    START = "https://mahsunsports.xyz"
     headers = HEADERS.copy()
     
     channels = [
