@@ -102,7 +102,7 @@ def get_selcuk_content():
         
         for cid, name in SELCUK_NAMES.items():
             link = f"{base_stream_url}{cid}/playlist.m3u8"
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selcuk-Panel", {name}\n#EXTVLCOPT:http-referrer={SELCUK_REFERRER}\n{link}'
+            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selçuk-Panel", {name}\n#EXTVLCOPT:http-referrer={SELCUK_REFERRER}\n{link}'
             results.append(entry)
     
     return results
