@@ -430,8 +430,8 @@ def get_bonus_content():
     print("--- 7. Bonus TV (Zeus) ---")
     results = []
     
-    BASE_DOMAIN_PATTERN = "zeustv{}.com"
-    START_INDEX = 233
+    BASE_DOMAIN_PATTERN = "zeustv{}.vip"
+    START_INDEX = 246
     END_INDEX = 500
     
     CHANNELS = {
