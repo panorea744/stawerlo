@@ -4,8 +4,8 @@ import re
 import os
 
 # --- KONFIGÜRASYON ---
-BASE_DOMAIN_PATTERN = "zeustv{}.com"
-START_INDEX = 230
+BASE_DOMAIN_PATTERN = "zeustv{}.vip"
+START_INDEX = 246
 END_INDEX = 500
 REQUEST_TIMEOUT = 5  # saniye
 GITHUB_FOLDER_NAME = "teyzeniyerim"
