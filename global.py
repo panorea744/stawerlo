@@ -487,7 +487,7 @@ def get_renconnect_content():
             print("OK:", name)
 
             entry = (
-                f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Palazzo", {name}\n'
+                f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {name}\n'
                 f'#EXTVLCOPT:http-referrer={referer}\n'
                 f'{stream}'
             )
