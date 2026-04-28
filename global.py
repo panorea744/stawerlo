@@ -344,87 +344,160 @@ def get_xsport_content():
     except: pass
     return results
 
+
+# ============ YENI PALAZZO (RENCONNECT) BOLUMU ============
+
+def decode_base64_safe(data):
+    try:
+        return base64.b64decode(data).decode("utf-8")
+    except:
+        return None
+
+
+def extract_stream(html):
+    for m in re.findall(r'atob\([\'"]([^\'"]+)[\'"]\)', html):
+        decoded = decode_base64_safe(m)
+        if decoded and ".m3u8" in decoded:
+            return decoded
+
+    m = re.search(r'https?://[^"\']+\.m3u8[^"\']*', html)
+    if m:
+        return m.group(0)
+
+    m = re.search(r'(?:file|source)["\']?\s*:\s*["\'](https?://[^"\']+)', html)
+    if m:
+        return m.group(1)
+
+    return None
+
+
+def get_active_domain():
+    base_pattern = "https://palazzocanli{}.com"
+
+    def check(i):
+        url = base_pattern.format(i)
+        try:
+            r = requests.head(url, headers=HEADERS, timeout=3, verify=False)
+            if r.status_code == 200:
+                return url
+        except:
+            pass
+        return None
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
+        futures = [ex.submit(check, i) for i in range(27, 101)]
+        for f in concurrent.futures.as_completed(futures):
+            r = f.result()
+            if r:
+                return r
+    return None
+
+
+def get_player_url(main_html, sample_id):
+    m = re.search(
+        rf'"url":"(https?://([^/]+)/player/player2\.php\?[^"]*?id={sample_id}[^"]*)"',
+        main_html
+    )
+    if not m:
+        return None, None, None
+
+    url = m.group(1).replace('\\/', '/')
+    domain = m.group(2)
+    referer = f"https://{domain}/"
+
+    return url, domain, referer
+
+
+def fetch_channel(active_site, player_template, cid):
+    try:
+        player_url = re.sub(r'id=[^&]+', f'id={cid}', player_template)
+
+        headers = HEADERS.copy()
+        headers["Origin"] = active_site
+        headers["Referer"] = active_site + "/"
+
+        r = requests.get(player_url, headers=headers, timeout=10, verify=False)
+
+        stream = extract_stream(r.text)
+
+        return cid, stream
+    except:
+        return cid, None
+
+
 def get_renconnect_content():
     print("--- 6. RenConnect (Palazzo) ---")
-    results = []
-    
+
     channels = [
         ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
         ("603", "beIN Sports 3"), ("604", "beIN Sports 4"),
         ("605", "beIN Sports 5"), ("607", "S Sport 1"),
-        ("608", "S Sport 2"), ("701", "Tivibu Spor 1"),
-        ("702", "Tivibu Spor 2"), ("703", "Tivibu Spor 3"),
-        ("704", "Tivibu Spor 4")
+        ("608", "S Sport 2"), ("609", "Smart Spor 1"),
+        ("610", "Smart Spor 2"),
+        ("701", "Tivibu Spor 1"), ("702", "Tivibu Spor 2"),
+        ("703", "Tivibu Spor 3"), ("704", "Tivibu Spor 4"),
+
+        ("tabii", "Tabii Spor"),
+        ("tabii1", "Tabii Spor 1"),
+        ("tabii2", "Tabii Spor 2"),
+        ("tabii3", "Tabii Spor 3"),
+        ("tabii4", "Tabii Spor 4"),
+        ("tabii5", "Tabii Spor 5"),
+        ("tabii6", "Tabii Spor 6"),
+
+        ("beinsportshaber", "beIN Haber"),
+        ("eurosport1", "Euro Spor 1"),
+        ("eurosport2", "Euro Spor 2"),
     ]
-    
-    base_pattern = "https://palazzocanli{}.com"
-    headers = HEADERS.copy()
 
-    def check_site(index):
-        url = base_pattern.format(index)
-        try:
-            r = requests.head(url, headers=headers, timeout=3, verify=False)
-            if r.status_code == 200:
-                return url
-        except:
-            return None
-        return None
+    results = []
 
-    active_site = None
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(check_site, i) for i in range(27, 101)]
-        for future in concurrent.futures.as_completed(futures):
-            result = future.result()
-            if result:
-                active_site = result
-                executor.shutdown(wait=False, cancel_futures=True)
-                break
-    
+    active_site = get_active_domain()
     if not active_site:
-        print("RenConnect: Site not found.")
+        print("RenConnect: Site yok")
         return results
-        
-    print(f"RenConnect Domain: {active_site}")
 
-    try:
-        r = requests.get(active_site, headers=headers, timeout=10, verify=False)
-        player_match = re.search(r'"url":"(https?://([^/]+)/player/player2\.php\?[^"]*?id=607[^"]*)"', r.text)
-        
-        if not player_match:
-            print("RenConnect: Template channel (607) not found.")
-            return results
+    print("RenConnect Domain:", active_site)
 
-        player_url = player_match.group(1).replace('\\/', '/')
-        player_domain = player_match.group(2)
-        referer_url = f"https://{player_domain}/"
+    r = requests.get(active_site, headers=HEADERS, timeout=10, verify=False)
 
-        p_headers = headers.copy()
-        p_headers["Origin"] = active_site
-        p_headers["Referer"] = active_site + "/"
-        r_player = requests.get(player_url, headers=p_headers, timeout=10, verify=False)
-        
-        m3u8_link = None
-        stream_match = re.search(r'const stream\s*=\s*atob\("(.*?)"\)', r_player.text)
-            
-        if stream_match:
-            decoded = base64.b64decode(stream_match.group(1)).decode('utf-8')
-            m3u8_link = decoded
+    player_template, domain, referer = get_player_url(r.text, "608")
 
-        if not m3u8_link:
-            print("RenConnect: m3u8 failed to decode.")
-            return results
+    if not player_template:
+        print("RenConnect: Template yok")
+        return results
 
-        m3u8_clean = m3u8_link.split('?')[0]
-        template_url = m3u8_clean.replace("/607/", "/{ID}/")
-        
-        for cid, cname in channels:
-            final_link = template_url.replace("{ID}", cid)
-            entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {cname}\n#EXTVLCOPT:http-referrer={referer_url}\n{final_link}'
+    print("RenConnect: Template bulundu")
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
+        futures = [
+            ex.submit(fetch_channel, active_site, player_template, cid)
+            for cid, _ in channels
+        ]
+
+        for f in concurrent.futures.as_completed(futures):
+            cid, stream = f.result()
+
+            name = next(n for c, n in channels if c == cid)
+
+            if not stream:
+                print("FAIL:", name)
+                continue
+
+            print("OK:", name)
+
+            entry = (
+                f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Palazzo", {name}\n'
+                f'#EXTVLCOPT:http-referrer={referer}\n'
+                f'{stream}'
+            )
+
             results.append(entry)
 
-    except: pass
-
     return results
+
+# ============ YENI PALAZZO BOLUMU SONU ============
+
 
 def get_bonus_content():
     print("--- 7. Bonus TV (Zeus) ---")
