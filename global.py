@@ -222,11 +222,11 @@ def get_andro_content():
             return None
         return None
 
-    print("Andro Panel icin aktif domain araniyor (10-99)...")
+    print("Andro Panel icin aktif domain araniyor (32-99)...")
     active_site = None
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(check_domain, i) for i in range(10, 100)]
+        futures = [executor.submit(check_domain, i) for i in range(32, 100)]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result:
