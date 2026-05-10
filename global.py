@@ -6,6 +6,8 @@ import os
 import concurrent.futures
 import base64
 from bs4 import BeautifulSoup
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore')
@@ -345,33 +347,30 @@ def get_xsport_content():
     return results
 
 
-# ============ YENI PALAZZO (RENCONNECT) BOLUMU ============
+# ============ YENI PALAZZO (RENCONNECT) BÖLÜMÜ (AES DECRYPTOR) ============
 
-def decode_base64_safe(data):
+def decrypt_palazzo(html_content):
     try:
-        return base64.b64decode(data).decode("utf-8")
+        key_match = re.search(r'const _0x1a.*?_0x29a\(\[(.*?)\]\)', html_content)
+        iv_match = re.search(r'const _0x2b.*?_0x29a\(\[(.*?)\]\)', html_content)
+        stream_match = re.search(r"var primaryStream = _0x3c\('(.*?)'\);", html_content)
+
+        if not (key_match and iv_match and stream_match):
+            return None
+
+        key = "".join(chr(int(x.strip()) - 17) for x in key_match.group(1).split(',')).encode('utf-8')
+        iv = "".join(chr(int(x.strip()) - 17) for x in iv_match.group(1).split(',')).encode('utf-8')
+
+        raw_data = base64.b64decode(stream_match.group(1))
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted = unpad(cipher.decrypt(raw_data), AES.block_size)
+        
+        return decrypted.decode('utf-8')
     except:
         return None
 
-
-def extract_stream(html):
-    for m in re.findall(r'atob\([\'"]([^\'"]+)[\'"]\)', html):
-        decoded = decode_base64_safe(m)
-        if decoded and ".m3u8" in decoded:
-            return decoded
-
-    m = re.search(r'https?://[^"\']+\.m3u8[^"\']*', html)
-    if m:
-        return m.group(0)
-
-    m = re.search(r'(?:file|source)["\']?\s*:\s*["\'](https?://[^"\']+)', html)
-    if m:
-        return m.group(1)
-
-    return None
-
-
-def get_active_domain():
+def get_palazzo_domain():
+    print("🔎 Palazzo için aktif domain aranıyor (27-200)...")
     base_pattern = "https://palazzocanli{}.com"
 
     def check(i):
@@ -380,53 +379,47 @@ def get_active_domain():
             r = requests.head(url, headers=HEADERS, timeout=3, verify=False)
             if r.status_code == 200:
                 return url
-        except:
-            pass
+        except: pass
         return None
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
-        futures = [ex.submit(check, i) for i in range(27, 101)]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as ex:
+        futures = [ex.submit(check, i) for i in range(27, 201)]
         for f in concurrent.futures.as_completed(futures):
-            r = f.result()
-            if r:
-                return r
+            res = f.result()
+            if res:
+                return res
     return None
 
+def get_palazzo_template(main_html):
+    m = re.search(r'"url":"(https?://[^"]+?id=)60[1-8][^"]*"', main_html)
+    if m:
+        url_template = m.group(1).replace('\\/', '/')
+        domain = re.search(r'https?://([^/]+)', url_template).group(1)
+        return url_template, f"https://{domain}/"
+    return None, None
 
-def get_player_url(main_html, sample_id):
-    m = re.search(
-        rf'"url":"(https?://([^/]+)/player/player2\.php\?[^"]*?id={sample_id}[^"]*)"',
-        main_html
-    )
-    if not m:
-        return None, None, None
-
-    url = m.group(1).replace('\\/', '/')
-    domain = m.group(2)
-    referer = f"https://{domain}/"
-
-    return url, domain, referer
-
-
-def fetch_channel(active_site, player_template, cid):
+def fetch_palazzo_channel(cid, player_template, active_site):
     try:
-        player_url = re.sub(r'id=[^&]+', f'id={cid}', player_template)
+        full_url = f"{player_template}{cid}"
+        p_headers = HEADERS.copy()
+        p_headers["Referer"] = active_site + "/"
+        p_headers["Origin"] = active_site
 
-        headers = HEADERS.copy()
-        headers["Origin"] = active_site
-        headers["Referer"] = active_site + "/"
-
-        r = requests.get(player_url, headers=headers, timeout=10, verify=False)
-
-        stream = extract_stream(r.text)
-
+        r = requests.get(full_url, headers=p_headers, timeout=10, verify=False)
+        stream = decrypt_palazzo(r.text)
+        
+        # Tabii ve Tabiiy kanalları için birincil link bulunamazsa yedek URL yapısı
+        if not stream and ('tabii' in cid or 'tabiiy' in cid):
+             stream = f"https://trt-live.mncdn.com/trt1/master.m3u8"
+             
         return cid, stream
     except:
+        if 'tabii' in cid or 'tabiiy' in cid:
+             return cid, f"https://trt-live.mncdn.com/trt1/master.m3u8"
         return cid, None
 
-
 def get_renconnect_content():
-    print("--- 6. RenConnect (Palazzo) ---")
+    print("--- 6. RenConnect (Palazzo AES Decryptor) ---")
 
     channels = [
         ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
@@ -436,48 +429,36 @@ def get_renconnect_content():
         ("610", "Smart Spor 2"),
         ("701", "Tivibu Spor 1"), ("702", "Tivibu Spor 2"),
         ("703", "Tivibu Spor 3"), ("704", "Tivibu Spor 4"),
-
-        ("tabii", "Tabii Spor"),
-        ("tabii1", "Tabii Spor 1"),
-        ("tabii2", "Tabii Spor 2"),
-        ("tabii3", "Tabii Spor 3"),
-        ("tabii4", "Tabii Spor 4"),
-        ("tabii5", "Tabii Spor 5"),
+        ("tabii", "Tabii Spor"), ("tabii1", "Tabii Spor 1"),
+        ("tabii2", "Tabii Spor 2"), ("tabii3", "Tabii Spor 3"),
+        ("tabii4", "Tabii Spor 4"), ("tabii5", "Tabii Spor 5"),
         ("tabii6", "Tabii Spor 6"),
-
         ("beinsportshaber", "beIN Haber"),
         ("eurosport1", "Euro Spor 1"),
         ("eurosport2", "Euro Spor 2"),
     ]
 
     results = []
-
-    active_site = get_active_domain()
+    active_site = get_palazzo_domain()
     if not active_site:
-        print("RenConnect: Site yok")
+        print("RenConnect: Site bulunamadı")
         return results
 
     print("RenConnect Domain:", active_site)
-
     r = requests.get(active_site, headers=HEADERS, timeout=10, verify=False)
-
-    player_template, domain, referer = get_player_url(r.text, "608")
+    player_template, referer_domain = get_palazzo_template(r.text)
 
     if not player_template:
-        print("RenConnect: Template yok")
+        print("RenConnect: Template bulunamadı")
         return results
 
     print("RenConnect: Template bulundu")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
-        futures = [
-            ex.submit(fetch_channel, active_site, player_template, cid)
-            for cid, _ in channels
-        ]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
+        futures = [ex.submit(fetch_palazzo_channel, cid, player_template, active_site) for cid, _ in channels]
 
         for f in concurrent.futures.as_completed(futures):
             cid, stream = f.result()
-
             name = next(n for c, n in channels if c == cid)
 
             if not stream:
@@ -485,18 +466,16 @@ def get_renconnect_content():
                 continue
 
             print("OK:", name)
-
             entry = (
                 f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {name}\n'
-                f'#EXTVLCOPT:http-referrer={referer}\n'
+                f'#EXTVLCOPT:http-referrer={referer_domain}\n'
                 f'{stream}'
             )
-
             results.append(entry)
 
     return results
 
-# ============ YENI PALAZZO BOLUMU SONU ============
+# ============ YENİ PALAZZO BÖLÜMÜ SONU ============
 
 
 def get_bonus_content():
@@ -504,7 +483,7 @@ def get_bonus_content():
     results = []
     
     BASE_DOMAIN_PATTERN = "zeustv{}.vip"
-    START_INDEX = 246
+    START_INDEX = 257
     END_INDEX = 500
     
     CHANNELS = {
@@ -586,7 +565,7 @@ def get_bonus_content():
     return results
 
 def main():
-    print("DeaTHLesS-Bot v3.0 Started...")
+    print("DeaTHLesS-Bot v3.2 Started...")
     
     all_content = ["#EXTM3U"]
     all_content.extend(get_selcuk_content())
@@ -594,7 +573,7 @@ def main():
     all_content.extend(get_trgoals_content())
     all_content.extend(get_andro_content())
     all_content.extend(get_xsport_content())
-    all_content.extend(get_renconnect_content())
+    all_content.extend(get_renconnect_content())  # Yeni AES Decryptor devrede
     all_content.extend(get_bonus_content())
     
     try:
