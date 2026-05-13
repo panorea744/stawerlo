@@ -228,7 +228,7 @@ def get_andro_content():
     active_site = None
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = [executor.submit(check_domain, i) for i in range(32, 100)]
+        futures = [executor.submit(check_domain, i) for i in range(35, 100)]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result:
