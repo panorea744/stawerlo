@@ -3,798 +3,791 @@
     "id": 117,
     "name": "S SPORT+",
     "logo": "http://ginikoturkish.com/channels/logo/ssport-1.jpg",
-    "stream": "https://trn03.tulix.tv/gt-ssportplus/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ssportplus/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=117"
   },
   {
     "id": 162,
     "name": "Turk Muzik Birligi TV",
     "logo": "http://ginikoturkish.com/channels/logo/turk-muzik-birligi-tmb-tv.png",
-    "stream": "https://trn03.tulix.tv/gt-tmb-azer/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tmb-azer/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=162"
   },
   {
     "id": 365,
     "name": "Ilke TV",
     "logo": "http://ginikoturkish.com/channels/logo/ilke-tv.jpg",
-    "stream": "https://trn03.tulix.tv/gt-ilketv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ilketv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=365"
   },
   {
     "id": 389,
     "name": "Kanal Avrupa",
     "logo": "http://ginikoturkish.com/channels/logo/kanal-avrupa.png",
-    "stream": "https://trn03.tulix.tv/gt-kanalavrupa/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kanalavrupa/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=389"
   },
   {
     "id": 623,
     "name": "Meltem TV",
     "logo": "http://ginikoturkish.com/channels/logo/meltem-tv.jpg",
-    "stream": "https://trn03.tulix.tv/gt-meltemtv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-meltemtv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=623"
   },
   {
     "id": 714,
     "name": "CNN International",
     "logo": "http://ginikoturkish.com/channels/logo/cnn-international.jpg",
-    "stream": "https://trn03.tulix.tv/CNN-International/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/CNN-International/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=714"
   },
   {
     "id": 718,
     "name": "NOW TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/now-tv-epg-.gif",
-    "stream": "https://trn03.tulix.tv/gt-nowtv-live/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-nowtv-live/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=718"
   },
   {
     "id": 723,
     "name": "Star TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/star-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-star-tv1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-star-tv1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=723"
   },
   {
     "id": 724,
     "name": "TV8 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tv8-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-tv8-tvs/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tv8-tvs/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=724"
   },
   {
     "id": 732,
     "name": "TYTTURK",
     "logo": "http://ginikoturkish.com/channels/logo/tytturk.jpg",
-    "stream": "https://trn03.tulix.tv/gt-tytturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tytturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=732"
   },
   {
     "id": 733,
     "name": "TV8.5 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tv8-5-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-tv8_5/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tv8_5/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=733"
   },
   {
     "id": 734,
     "name": "Kanal D (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/kanal-d-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-kanald-1tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kanald-1tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=734"
   },
   {
     "id": 735,
     "name": "Show TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/show-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-shows-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-shows-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=735"
   },
   {
     "id": 736,
     "name": "Show Max (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/show-max-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-showmax/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-showmax/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=736"
   },
   {
     "id": 738,
     "name": "TV100 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tv100-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-tv100/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tv100/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=738"
   },
   {
     "id": 739,
     "name": "Beyaz TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/beyaz-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-beyaztv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-beyaztv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=739"
   },
   {
     "id": 740,
     "name": "Kanal 7 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/kanal-7-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-kanal7/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kanal7/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=740"
   },
   {
     "id": 741,
     "name": "Ulke TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/ulke-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-ulketv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ulketv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=741"
   },
   {
     "id": 742,
     "name": "Sky 360 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/sky-360-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-sky360/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-sky360/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=742"
   },
   {
     "id": 743,
     "name": "TRT Turk (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-turk-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trtturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=743"
   },
   {
     "id": 744,
     "name": "A2 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/a2-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-atv-a2tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-atv-a2tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=744"
   },
   {
     "id": 745,
     "name": "TLC Turkiye (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tlc-turkiye-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-tlc-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tlc-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=745"
   },
   {
     "id": 746,
     "name": "DMAX Turkiye",
     "logo": "http://ginikoturkish.com/channels/logo/dmax-turkiye-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-dmax-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-dmax-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=746"
   },
   {
     "id": 747,
     "name": "TRT Avaz (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-avaz-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-trtavaz/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtavaz/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=747"
   },
   {
     "id": 749,
     "name": "TRT Spor Yildiz (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-spor-yildiz-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trt-spor2/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt-spor2/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=749"
   },
   {
     "id": 750,
     "name": "A News",
     "logo": "http://ginikoturkish.com/channels/logo/a-news.jpg",
-    "stream": "https://trn03.tulix.tv/gt-anews/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-anews/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=750"
   },
   {
     "id": 751,
     "name": "beIN Sports Haber (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/bein-sports-haber-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-beinsportshaber/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-beinsportshaber/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=751"
   },
   {
     "id": 752,
     "name": "Fenerbahce TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/fenerbahce-tv.png",
-    "stream": "https://trn03.tulix.tv/gt-fbtv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-fbtv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=752"
   },
   {
     "id": 753,
     "name": "Ekol TV",
     "logo": "http://ginikoturkish.com/channels/logo/ekol-tv.jpg",
-    "stream": "https://trn03.tulix.tv/gt-ekoltv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ekoltv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=753"
   },
   {
     "id": 754,
     "name": "Sports TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/sports-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-sporttv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-sporttv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=754"
   },
   {
     "id": 755,
     "name": "beIN Sports Lig Tv1",
     "logo": "http://ginikoturkish.com/channels/logo/bein-sports-lig-tv1.png",
-    "stream": "https://trn03.tulix.tv/gt-ligtv-1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ligtv-1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=755"
   },
   {
     "id": 756,
     "name": "beIN Sports Lig Tv2",
     "logo": "http://ginikoturkish.com/channels/logo/bein-sports-lig-tv2.png",
-    "stream": "https://trn03.tulix.tv/gt-ligtv2/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ligtv2/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=756"
   },
   {
     "id": 757,
     "name": "beIN Sports Lig Tv3",
     "logo": "http://ginikoturkish.com/channels/logo/bein-sports-lig-tv3.png",
-    "stream": "https://trn03.tulix.tv/gt-ligtv3/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ligtv3/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=757"
   },
   {
     "id": 758,
     "name": "TRT Muzik (EPG).",
     "logo": "http://ginikoturkish.com/channels/logo/trt-muzik-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-trtmusic/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtmusic/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=758"
   },
   {
     "id": 760,
     "name": "Diyanet TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/diyanet-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trtdiyanet/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtdiyanet/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=760"
   },
   {
     "id": 761,
     "name": "Yaban TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/yaban-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-yabantv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-yabantv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=761"
   },
   {
     "id": 762,
     "name": "TRT Belgesel (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-belgesel-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trtbelgesel/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtbelgesel/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=762"
-  },
-  {
-    "id": 764,
-    "name": "TRT Cocuk (EPG)",
-    "logo": "http://ginikoturkish.com/channels/logo/trt-cocuk-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trtcocuk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
-    "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=764"
   },
   {
     "id": 765,
     "name": "minika Cocuk (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/minika-cocuk.png",
-    "stream": "https://trn03.tulix.tv/gt-minikacocuk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-minikacocuk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=765"
   },
   {
     "id": 766,
     "name": "minika GO (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/minika-go-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-minikago/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-minikago/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=766"
   },
   {
     "id": 768,
     "name": "Cartoon Network TR (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/cartoon-network-tr-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-cartoontr/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-cartoontr/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=768"
   },
   {
     "id": 769,
     "name": "NTV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/ntv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-ntv-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ntv-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=769"
   },
   {
     "id": 770,
     "name": "CNN Turk (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/cnn-turk-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-cnnturk-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-cnnturk-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=770"
   },
   {
     "id": 771,
     "name": "Haber Turk (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/haber-turk-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-haberturktv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-haberturktv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=771"
   },
   {
     "id": 772,
     "name": "Haber Global (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/haber-global-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-haber-globaltv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-haber-globaltv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=772"
   },
   {
     "id": 773,
     "name": "KRT Kultur TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/krt-kultur-tv-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-krt--tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-krt--tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=773"
   },
   {
     "id": 774,
     "name": "Ulusal TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/ulusal-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-ulusal-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ulusal-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=774"
   },
   {
     "id": 775,
     "name": "A Haber - (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/a-haber.png",
-    "stream": "https://trn03.tulix.tv/gt-ahabertv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ahabertv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=775"
   },
   {
     "id": 776,
     "name": "EkoTurk(EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/ekot-rk-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-ekoturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ekoturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=776"
   },
   {
     "id": 777,
     "name": "Kanal 24 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/kanal-24-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-kanal24/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kanal24/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=777"
   },
   {
     "id": 778,
     "name": "TRT Haber (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-haber-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trthaber/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trthaber/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=778"
   },
   {
     "id": 779,
     "name": "TRT World (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-world-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trtworld/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtworld/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=779"
   },
   {
     "id": 780,
     "name": "TVNET (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tvnet-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-tvnettv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tvnettv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=780"
   },
   {
     "id": 781,
     "name": "Idman TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/idman-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-idmantv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-idmantv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=781"
   },
   {
     "id": 782,
     "name": "CBC Sport Azerbaijan (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/cbs-sport-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-cbcsport/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-cbcsport/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=782"
   },
   {
     "id": 785,
     "name": "TRT Spor (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-spor-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trt-sportv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt-sportv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=785"
   },
   {
     "id": 786,
     "name": "TRT 4K",
     "logo": "http://ginikoturkish.com/channels/logo/trt-4k.jpg",
-    "stream": "https://trn03.tulix.tv/gt-trt4k/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt4k/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=786"
   },
   {
     "id": 787,
     "name": "TRT 1 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-1-epg-.gif",
-    "stream": "https://trn03.tulix.tv/gt-trt1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=787"
   },
   {
     "id": 790,
     "name": "Spor Smart HD",
     "logo": "http://ginikoturkish.com/channels/logo/spor-smart-hd-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-sporsmarthd/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-sporsmarthd/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=790"
   },
   {
     "id": 791,
     "name": "S SPORT",
     "logo": "http://ginikoturkish.com/channels/logo/s-sport.jpg",
-    "stream": "https://trn03.tulix.tv/gt-ssport1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ssport1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=791"
   },
   {
     "id": 793,
     "name": "Spor Smart 2 HD",
     "logo": "http://ginikoturkish.com/channels/logo/spor-smart-2-hd.jpg",
-    "stream": "https://trn03.tulix.tv/gt-sporsmarthd2/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-sporsmarthd2/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=793"
   },
   {
     "id": 797,
     "name": "Tivibu Spor",
     "logo": "http://ginikoturkish.com/channels/logo/tivibu-spor-1.png",
-    "stream": "https://trn03.tulix.tv/gt-tivibuspor1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tivibuspor1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=797"
   },
   {
     "id": 800,
     "name": "Power Turk",
     "logo": "http://ginikoturkish.com/channels/logo/.jpg",
-    "stream": "https://trn03.tulix.tv/gt-powerturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-powerturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=800"
   },
   {
     "id": 801,
     "name": "Exxen 1",
     "logo": "http://ginikoturkish.com/channels/logo/exxen-1.png",
-    "stream": "https://trn03.tulix.tv/gt-exxen--1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-exxen--1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=801"
   },
   {
     "id": 802,
     "name": "Halk TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/halk-tv-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-halk-tvs/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-halk-tvs/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=802"
   },
   {
     "id": 805,
     "name": "ATV Avrupa (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/atv-avrupa.png",
-    "stream": "https://trn03.tulix.tv/gt-atv-avrupa-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-atv-avrupa-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=805"
   },
   {
     "id": 806,
     "name": "TV8  Int (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tv8-int-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-tv8international/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tv8international/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=806"
   },
   {
     "id": 807,
     "name": "TRT 1 TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-1-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trt1-tveu/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt1-tveu/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=807"
   },
   {
     "id": 808,
     "name": "TRT Turk (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-turk.png",
-    "stream": "https://trn03.tulix.tv/gt-trtturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=808"
   },
   {
     "id": 809,
     "name": "TRT Spor HD (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-spor-hd-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-trt-spor1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt-spor1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=809"
   },
   {
     "id": 811,
     "name": "TRT Muzik (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-muzik.jpg",
-    "stream": "https://trn03.tulix.tv/gt-trtmusic/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtmusic/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=811"
   },
   {
     "id": 812,
     "name": "TRT Cocuk (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-cocuk-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-trtcocuk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trtcocuk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=812"
   },
   {
     "id": 813,
     "name": "NTV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/ntv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-ntvtv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ntvtv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=813"
   },
   {
     "id": 814,
     "name": "Kanal 7 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/kanal-7-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-kanal7/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kanal7/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=814"
   },
   {
     "id": 815,
     "name": "Ulke TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/ulke-tv.png",
-    "stream": "https://trn03.tulix.tv/gt-ulketv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ulketv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=815"
   },
   {
     "id": 816,
     "name": "ATV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/atv-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-atv-live/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-atv-live/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=816"
   },
   {
     "id": 817,
     "name": "Star TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/star-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-star-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-star-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=817"
   },
   {
     "id": 818,
     "name": "TV8 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/tv8-epg-.png",
-    "stream": "https://trn03.tulix.tv/tv8-hd-tv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/tv8-hd-tv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=818"
   },
   {
     "id": 819,
     "name": "TRT Haber (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-haber.png",
-    "stream": "https://trn03.tulix.tv/gt-trthaber/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trthaber/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=819"
   },
   {
     "id": 822,
     "name": "A Spor (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/a-spor-epg-.jpg",
-    "stream": "https://trn03.tulix.tv/gt-aspor/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-aspor/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=822"
   },
   {
     "id": 825,
     "name": "TV8",
     "logo": "http://ginikoturkish.com/channels/logo/tv8.jpg",
-    "stream": "https://trn03.tulix.tv/tv8-hdtv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/tv8-hdtv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=825"
   },
   {
     "id": 826,
     "name": "StarTV",
     "logo": "http://ginikoturkish.com/channels/logo/star-tv-.png",
-    "stream": "https://trn03.tulix.tv/gt-startv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-startv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=826"
   },
   {
     "id": 828,
     "name": "Bein Sports Xtra",
     "logo": "http://ginikoturkish.com/channels/logo/bein-sports-xtra.jpg",
-    "stream": "https://trn03.tulix.tv/BeinSportsXtra/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/BeinSportsXtra/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=828"
   },
   {
     "id": 830,
     "name": "TRT Spor HD",
     "logo": "http://ginikoturkish.com/channels/logo/trt-spor-hd-.png",
-    "stream": "https://trn03.tulix.tv/gt-trt-spor1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt-spor1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=830"
   },
   {
     "id": 831,
     "name": "TRT 1",
     "logo": "http://ginikoturkish.com/channels/logo/trt-1-.png",
-    "stream": "https://trn03.tulix.tv/gt-trt1-tveu/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt1-tveu/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=831"
   },
   {
     "id": 872,
     "name": "Sozcu TV (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/sozcu-tv-epg-.png",
-    "stream": "https://trn03.tulix.tv/gt-sozcu-livetv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-sozcu-livetv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=872"
   },
   {
     "id": 876,
     "name": "Sat7 Turk",
     "logo": "http://ginikoturkish.com/channels/logo/sat7-turk.gif",
-    "stream": "https://trn03.tulix.tv/gt-sat7turk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-sat7turk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=876"
   },
   {
     "id": 879,
     "name": "LUYS TV",
     "logo": "http://ginikoturkish.com/channels/logo/luys-tv.jpg",
-    "stream": "https://trn03.tulix.tv/gt-luystv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-luystv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=879"
   },
   {
     "id": 880,
     "name": "Kentron TV",
     "logo": "http://ginikoturkish.com/channels/logo/kentron-tv.gif",
-    "stream": "https://trn03.tulix.tv/gt-kentron/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kentron/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=880"
   },
   {
     "id": 881,
     "name": "1TV Armenia H1",
     "logo": "http://ginikoturkish.com/channels/logo/1tv-armenia-h1.gif",
-    "stream": "https://trn03.tulix.tv/gt-1tvar/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-1tvar/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=881"
   },
   {
     "id": 891,
     "name": "TRT 2 (EPG)",
     "logo": "http://ginikoturkish.com/channels/logo/trt-2-epg-.gif",
-    "stream": "https://trn03.tulix.tv/gt-trt2/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-trt2/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=891"
   },
   {
     "id": 904,
     "name": "ARB 24 TV",
     "logo": "http://ginikoturkish.com/channels/logo/arb-24-tv.gif",
-    "stream": "https://trn03.tulix.tv/gt-arb24-tv1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-arb24-tv1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=904"
   },
   {
     "id": 905,
     "name": "ARB TV",
     "logo": "http://ginikoturkish.com/channels/logo/arb-tv.gif",
-    "stream": "https://trn03.tulix.tv/gt-arb-tv1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-arb-tv1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=905"
   },
   {
     "id": 906,
     "name": "Ictimai TV",
     "logo": "http://ginikoturkish.com/channels/logo/ictimai-tv.gif",
-    "stream": "https://trn03.tulix.tv/gt-ictimaitv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-ictimaitv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=906"
   },
   {
     "id": 907,
     "name": "Medeniyyet TV",
     "logo": "http://ginikoturkish.com/channels/logo/medeniyyet-tv.gif",
-    "stream": "https://trn03.tulix.tv/gt-medeniyyet/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-medeniyyet/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=907"
   },
   {
     "id": 908,
     "name": "Real TV",
     "logo": "http://ginikoturkish.com/channels/logo/real-tv.png",
-    "stream": "https://trn03.tulix.tv/gt-realtv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-realtv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=908"
   },
   {
     "id": 909,
     "name": "Zexer Xeber",
     "logo": "http://ginikoturkish.com/channels/logo/zexer-xeber.png",
-    "stream": "https://trn03.tulix.tv/gt-zexer-xeber/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-zexer-xeber/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=909"
   },
   {
     "id": 911,
     "name": "Kepez TV",
     "logo": "http://ginikoturkish.com/channels/logo/kepez-tv.png",
-    "stream": "https://trn03.tulix.tv/gt-kepez-tv-azeri/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-kepez-tv-azeri/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=911"
   },
   {
     "id": 912,
     "name": "Space TV",
     "logo": "http://ginikoturkish.com/channels/logo/space-tv.jpg",
-    "stream": "https://trn03.tulix.tv/gt-spacetv/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-spacetv/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=912"
   },
   {
     "id": 913,
     "name": "Start TV",
     "logo": "http://ginikoturkish.com/channels/logo/start-tv.png",
-    "stream": "https://trn03.tulix.tv/gt-startv-azer/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-startv-azer/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=913"
   },
   {
     "id": 915,
     "name": "Kibris BRT1",
     "logo": "http://ginikoturkish.com/channels/logo/kibris-brt1-.png",
-    "stream": "https://trn03.tulix.tv/gt-brt1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-brt1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=915"
   },
   {
     "id": 916,
     "name": "TIVI6",
     "logo": "http://ginikoturkish.com/channels/logo/tivi6.jpg",
-    "stream": "https://trn03.tulix.tv/gt-tivi6/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tivi6/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=916"
   },
   {
     "id": 917,
     "name": "TV4",
     "logo": "http://ginikoturkish.com/channels/logo/tv4.jpg",
-    "stream": "https://trn03.tulix.tv/gt-tv4/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-tv4/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=917"
   },
   {
     "id": 918,
     "name": "Dream Turk",
     "logo": "http://ginikoturkish.com/channels/logo/dream-turk.jpg",
-    "stream": "https://trn03.tulix.tv/gt-dreamturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-dreamturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=918"
   },
   {
     "id": 919,
     "name": "Bengu Turk",
     "logo": "http://ginikoturkish.com/channels/logo/bengu-turk.gif",
-    "stream": "https://trn03.tulix.tv/gt-benguturk/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-benguturk/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=919"
   },
   {
     "id": 920,
     "name": "Kibris BRT2",
     "logo": "http://ginikoturkish.com/channels/logo/kibris-brt2.jpg",
-    "stream": "https://trn03.tulix.tv/gt-brt2/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-brt2/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=920"
   },
   {
     "id": 921,
     "name": "A Para",
     "logo": "http://ginikoturkish.com/channels/logo/a-para.jpg",
-    "stream": "https://trn03.tulix.tv/gt-apara/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-apara/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=921"
   },
   {
     "id": 922,
     "name": "Bloomberg Haber Turk",
     "logo": "http://ginikoturkish.com/channels/logo/bloomberg-haber-turk.gif",
-    "stream": "https://trn03.tulix.tv/gt-bloomberght/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-bloomberght/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=922"
   },
   {
     "id": 924,
     "name": "Bosnia Hayat",
     "logo": "http://ginikoturkish.com/channels/logo/bosnia-hayat-1.png",
-    "stream": "https://trn03.tulix.tv/gt-BosniaHayat1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-BosniaHayat1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=924"
   },
   {
     "id": 925,
     "name": "Bosnia BHT1",
     "logo": "http://ginikoturkish.com/channels/logo/bosnia-bht1.gif",
-    "stream": "https://trn03.tulix.tv/gt-BosniaBHT1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-BosniaBHT1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=925"
   },
   {
     "id": 926,
     "name": "Bosnia Arena Sport1",
     "logo": "http://ginikoturkish.com/channels/logo/bosnia-arena-sport1.gif",
-    "stream": "https://trn03.tulix.tv/gt-BosniaArenaSport1/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-BosniaArenaSport1/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=926"
   },
   {
     "id": 945,
     "name": "EuroStar",
     "logo": "http://ginikoturkish.com/channels/logo/eurostar.png",
-    "stream": "https://trn03.tulix.tv/gt-eurostar/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-eurostar/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=945"
   },
   {
     "id": 954,
     "name": "HT Spor",
     "logo": "http://ginikoturkish.com/channels/logo/ht-spor.jpg",
-    "stream": "https://trn03.tulix.tv/gt-htspor/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-htspor/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=954"
   },
   {
     "id": 955,
     "name": "CNBC-E Turk",
     "logo": "http://ginikoturkish.com/channels/logo/cnbc-e-turk.gif",
-    "stream": "https://trn03.tulix.tv/gt-cnbce/index.m3u8?token=63a194480d1896aade51e84ffc0e7cc3",
+    "stream": "https://trn03.tulix.tv/gt-cnbce/index.m3u8?token=5cd81b3ee9c36c118e50f61f6087bfa7",
     "xmlUrl": "https://ginikoturkish.com/xml/secure/plist.php?ch=955"
   },
   {
