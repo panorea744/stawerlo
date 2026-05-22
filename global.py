@@ -5,6 +5,7 @@ import warnings
 import os
 import concurrent.futures
 import base64
+import json
 from bs4 import BeautifulSoup
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
@@ -13,13 +14,17 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore')
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 }
 TIMEOUT_VAL = 15
 PROXY_URL = "https://seep.eu.org/"
 OUTPUT_FILENAME = "DeaTHLesS-Bot-iptv.m3u"
 STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
+
+# ============================================
+# 1. SELCUK SPORTS
+# ============================================
 
 SELCUK_NAMES = {
     "sbeinsports-1": "beIN Sports 1", "selcukobs1": "beIN Sports 1", "selcukbeinsports1": "beIN Sports 1",
@@ -40,39 +45,46 @@ SELCUK_REFERRER = "https://selcuksportshd1903.xyz"
 def get_selcuk_content():
     print("--- 1. Selcuk Sports ---")
     results = []
-    
+
     def get_html_proxy(url):
         target_url = PROXY_URL + url
         try:
             r = requests.get(target_url, headers=HEADERS, timeout=TIMEOUT_VAL, verify=False)
             r.raise_for_status()
             return r.text
-        except: return None
+        except:
+            return None
 
     def get_html_direct(url, referer=None):
         try:
             headers = HEADERS.copy()
-            if referer: headers["Referer"] = referer
+            if referer:
+                headers["Referer"] = referer
             r = requests.get(url, headers=headers, timeout=TIMEOUT_VAL, verify=False)
             r.raise_for_status()
             return r.text
-        except: return None
+        except:
+            return None
 
     start_url = "https://www.selcuksportshd.is/"
     html = get_html_proxy(start_url)
-    if not html: return results
+    if not html:
+        return results
 
     active_domain = ""
     section_match = re.search(r'data-device-mobile[^>]*>(.*?)</div>\s*</div>', html, re.DOTALL)
     if section_match:
         link_match = re.search(r'href=["\'](https?://[^"\']*selcuksportshd[^"\']+)["\']', section_match.group(1))
-        if link_match: active_domain = link_match.group(1).strip().rstrip('/')
+        if link_match:
+            active_domain = link_match.group(1).strip().rstrip('/')
 
-    if not active_domain: return results
+    if not active_domain:
+        return results
     print(f"Selcuk Domain: {active_domain}")
-    
+
     domain_html = get_html_direct(active_domain)
-    if not domain_html: return results
+    if not domain_html:
+        return results
 
     player_links = re.findall(r'data-url=["\'](https?://[^"\']+?id=[^"\']+?)["\']', domain_html)
     if not player_links:
@@ -96,18 +108,26 @@ def get_selcuk_content():
                     if 'live/' in base_stream_url:
                         base_stream_url = base_stream_url.split('live/')[0] + 'live/'
                     break
-            if base_stream_url: break
+            if base_stream_url:
+                break
 
     if base_stream_url:
-        if not base_stream_url.endswith('/'): base_stream_url += '/'
-        if 'live/' not in base_stream_url: base_stream_url = base_stream_url.rstrip('/') + '/live/'
-        
+        if not base_stream_url.endswith('/'):
+            base_stream_url += '/'
+        if 'live/' not in base_stream_url:
+            base_stream_url = base_stream_url.rstrip('/') + '/live/'
+
         for cid, name in SELCUK_NAMES.items():
             link = f"{base_stream_url}{cid}/playlist.m3u8"
             entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Selçuk-Panel", {name}\n#EXTVLCOPT:http-referrer={SELCUK_REFERRER}\n{link}'
             results.append(entry)
-    
+
     return results
+
+
+# ============================================
+# 2. ATOM SPOR
+# ============================================
 
 ATOM_CHANNELS = [
     ("bein-sports-1", "beIN Sports 1"), ("bein-sports-2", "beIN Sports 2"),
@@ -125,7 +145,7 @@ def get_atom_content():
     headers = HEADERS.copy()
     headers['Referer'] = 'https://url24.link/'
     base_domain = "https://www.atomsportv480.top"
-    
+
     try:
         r = requests.get(start_url, headers=headers, allow_redirects=False, timeout=10)
         if 'location' in r.headers:
@@ -134,7 +154,8 @@ def get_atom_content():
             if 'location' in r2.headers:
                 base_domain = r2.headers['location'].strip().rstrip('/')
                 print(f"Atom Domain: {base_domain}")
-    except: pass
+    except:
+        pass
 
     for cid, name in ATOM_CHANNELS:
         try:
@@ -143,7 +164,8 @@ def get_atom_content():
             fetch_match = re.search(r'fetch\(\s*["\'](.*?)["\']', r.text)
             if fetch_match:
                 fetch_url = fetch_match.group(1).strip()
-                if not fetch_url.endswith(cid): fetch_url += cid
+                if not fetch_url.endswith(cid):
+                    fetch_url += cid
                 cust_headers = headers.copy()
                 cust_headers['Origin'] = base_domain
                 cust_headers['Referer'] = base_domain
@@ -154,8 +176,14 @@ def get_atom_content():
                     if link.endswith('.m3u8'):
                         entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Atom-Panel", {name}\n#EXTVLCOPT:http-referrer={base_domain}\n{link}'
                         results.append(entry)
-        except: continue
+        except:
+            continue
     return results
+
+
+# ============================================
+# 3. TRGOALS
+# ============================================
 
 TRGOALS_STATIC_LIST = [
     ("TRGoals Ana", "https://spring-band-25c2.panorea1000.workers.dev/trgoals.m3u8"),
@@ -186,12 +214,17 @@ def get_trgoals_content():
         results.append(entry)
     return results
 
+
+# ============================================
+# 4. ANDRO PANEL
+# ============================================
+
 def get_andro_content():
     print("--- 4. Andro Panel ---")
     results = []
     base_pattern = "https://mahsunsports{}.xyz"
     headers = HEADERS.copy()
-    
+
     channels = [
         ("androstreamlivebiraz1", 'TR:beIN Sport 1 HD'), ("androstreamlivebs1", 'TR:beIN Sport 1 HD'),
         ("androstreamlivebs2", 'TR:beIN Sport 2 HD'), ("androstreamlivebs3", 'TR:beIN Sport 3 HD'),
@@ -202,16 +235,11 @@ def get_andro_content():
         ("androstreamlivets2", 'TR:Tivibu Sport 2 HD'), ("androstreamlivets3", 'TR:Tivibu Sport 3 HD'),
         ("androstreamlivets4", 'TR:Tivibu Sport 4 HD'), ("androstreamlivesm1", 'TR:Smart Sport 1 HD'),
         ("androstreamlivesm2", 'TR:Smart Sport 2 HD'), ("androstreamlivees1", 'TR:Euro Sport 1 HD'),
-        ("androstreamlivees2", 'TR:Euro Sport 2 HD'), ("androstreamlivetb", 'TR:Tabii HD'),
-        ("androstreamlivetb1", 'TR:Tabii 1 HD'), ("androstreamlivetb2", 'TR:Tabii 2 HD'),
-        ("androstreamlivetb3", 'TR:Tabii 3 HD'), ("androstreamlivetb4", 'TR:Tabii 4 HD'),
-        ("androstreamlivetb5", 'TR:Tabii 5 HD'), ("androstreamlivetb6", 'TR:Tabii 6 HD'),
-        ("androstreamlivetb7", 'TR:Tabii 7 HD'), ("androstreamlivetb8", 'TR:Tabii 8 HD'),
-        ("androstreamliveexn", 'TR:Exxen HD'), ("androstreamliveexn1", 'TR:Exxen 1 HD'),
-        ("androstreamliveexn2", 'TR:Exxen 2 HD'), ("androstreamliveexn3", 'TR:Exxen 3 HD'),
-        ("androstreamliveexn4", 'TR:Exxen 4 HD'), ("androstreamliveexn5", 'TR:Exxen 5 HD'),
-        ("androstreamliveexn6", 'TR:Exxen 6 HD'), ("androstreamliveexn7", 'TR:Exxen 7 HD'),
-        ("androstreamliveexn8", 'TR:Exxen 8 HD')
+        ("androstreamlivees2", 'TR:Euro Sport 2 HD'), ("androstreamliveexn", 'TR:Exxen HD'),
+        ("androstreamliveexn1", 'TR:Exxen 1 HD'), ("androstreamliveexn2", 'TR:Exxen 2 HD'),
+        ("androstreamliveexn3", 'TR:Exxen 3 HD'), ("androstreamliveexn4", 'TR:Exxen 4 HD'),
+        ("androstreamliveexn5", 'TR:Exxen 5 HD'), ("androstreamliveexn6", 'TR:Exxen 6 HD'),
+        ("androstreamliveexn7", 'TR:Exxen 7 HD'), ("androstreamliveexn8", 'TR:Exxen 8 HD')
     ]
 
     def check_domain(index):
@@ -226,7 +254,7 @@ def get_andro_content():
 
     print("Andro Panel icin aktif domain araniyor (35-99)...")
     active_site = None
-    
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         futures = [executor.submit(check_domain, i) for i in range(35, 100)]
         for future in concurrent.futures.as_completed(futures):
@@ -237,31 +265,29 @@ def get_andro_content():
                 break
 
     if not active_site:
-        print("Andro Panel: 10 ile 99 arasinda aktif site bulunamadi.")
+        print("Andro Panel: Aktif site bulunamadi.")
         return results
-        
-    print(f"Andro Panel Guncel Domain Bulundu: {active_site}")
-    
+
+    print(f"Andro Panel Domain: {active_site}")
+
     event_url = f"{active_site}/event.html?id=androstreamlivebs1"
-    print(f"Event sayfasi kontrol ediliyor: {event_url}")
-    
     try:
         r2 = requests.get(event_url, headers=headers, verify=False, timeout=10)
         h2_text = r2.text
     except Exception as e:
         print(f"Andro Panel: Event sayfasi alinamadi. Hata: {e}")
         return results
-        
+
     baseurl_match = re.search(r'baseurls\s*=\s*\[(.*?)\]', h2_text, re.DOTALL | re.IGNORECASE)
-    if not baseurl_match: 
-        print("Andro Panel: baseurls dizisi event sayfasinda bulunamadi.")
+    if not baseurl_match:
+        print("Andro Panel: baseurls bulunamadi.")
         return results
-        
+
     urls_text = baseurl_match.group(1).replace('"', '').replace("'", "").replace("\n", "").replace("\r", "")
     servers = [url.strip() for url in urls_text.split(',') if url.strip().startswith("http")]
     servers = list(set(servers))
     print(f"Bulunan Sunucular: {servers}")
-    
+
     active_servers = []
     test_id = "androstreamlivebs1"
     for server in servers:
@@ -270,11 +296,11 @@ def get_andro_content():
         test_url = test_url.replace("checklist//", "checklist/")
         try:
             temp_response = requests.get(test_url, headers={'Referer': active_site + "/"}, verify=False, timeout=5)
-            if temp_response.status_code == 200: 
+            if temp_response.status_code == 200:
                 active_servers.append(server)
-        except: 
+        except:
             continue
-    
+
     for server in active_servers:
         server = server.rstrip('/')
         for cid, cname in channels:
@@ -282,8 +308,13 @@ def get_andro_content():
             final_url = final_url.replace("checklist//", "checklist/")
             entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="Andro-Panel", {cname}\n#EXTVLCOPT:http-referrer={active_site}/\n{final_url}'
             results.append(entry)
-    
+
     return results
+
+
+# ============================================
+# 5. XSPORT
+# ============================================
 
 def get_xsport_content():
     print("--- 5. XSport ---")
@@ -303,8 +334,10 @@ def get_xsport_content():
         url = base_pattern.format(index)
         try:
             response = requests.get(url, headers=headers, timeout=5)
-            if response.status_code == 200: return url
-        except: return None
+            if response.status_code == 200:
+                return url
+        except:
+            return None
 
     def find_active_domain():
         with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
@@ -323,13 +356,15 @@ def get_xsport_content():
             if match:
                 base = match.group(1)
                 return f"{base}{stream_id}/playlist.m3u8"
-        except: pass
+        except:
+            pass
         return None
 
     domain = find_active_domain()
-    if not domain: return results
+    if not domain:
+        return results
     print(f"XSport Domain: {domain}")
-    
+
     try:
         response = requests.get(domain, headers=headers, timeout=10)
         for cid in channel_ids:
@@ -340,63 +375,109 @@ def get_xsport_content():
                 final_url = get_stream_url(player_link, cid)
                 if final_url:
                     clean_name = cid.replace("x", "").replace("-", " ").upper()
-                    if "BEINSPORTS" in clean_name: clean_name = clean_name.replace("BEINSPORTS", "beIN Sports")
+                    if "BEINSPORTS" in clean_name:
+                        clean_name = clean_name.replace("BEINSPORTS", "beIN Sports")
                     entry = f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="XSport-Panel", {clean_name}\n#EXTVLCOPT:http-referer={domain}\n{final_url}'
                     results.append(entry)
-    except: pass
+    except:
+        pass
     return results
 
 
-# ============ YENI PALAZZO (RENCONNECT) BÖLÜMÜ (AES DECRYPTOR) ============
+# ============================================
+# 6. PALAZZO (YENİ AES SİSTEM)
+# ============================================
+
+def restore_str(arr, offset):
+    return "".join(chr(int(x) - offset) for x in arr)
+
 
 def decrypt_palazzo(html_content):
     try:
-        key_match = re.search(r'const _0x1a.*?_0x29a\(\[(.*?)\]\)', html_content)
-        iv_match = re.search(r'const _0x2b.*?_0x29a\(\[(.*?)\]\)', html_content)
-        stream_match = re.search(r"var primaryStream = _0x3c\('(.*?)'\);", html_content)
+        val_match = re.search(r'data-val="([^"]+)"', html_content)
+        enc_match = re.search(r'data-enc="([^"]+)"', html_content)
+        key_match = re.search(r'var keyArray\s*=\s*\[(.*?)\]', html_content, re.S)
+        stream_match = re.search(r"var primaryStream\s*=\s*decryptUrl\('([^']+)'\)", html_content)
 
-        if not (key_match and iv_match and stream_match):
+        if not all([val_match, enc_match, key_match, stream_match]):
             return None
 
-        key = "".join(chr(int(x.strip()) - 17) for x in key_match.group(1).split(',')).encode('utf-8')
-        iv = "".join(chr(int(x.strip()) - 17) for x in iv_match.group(1).split(',')).encode('utf-8')
+        offset = int(base64.b64decode(val_match.group(1)).decode())
 
-        raw_data = base64.b64decode(stream_match.group(1))
+        iv_array = json.loads(base64.b64decode(enc_match.group(1)).decode())
+
+        key_array = [int(x.strip()) for x in key_match.group(1).split(',')]
+
+        key = restore_str(key_array, offset).encode("utf-8")
+        iv = restore_str(iv_array, offset).encode("utf-8")
+
+        encrypted_data = base64.b64decode(stream_match.group(1))
+
         cipher = AES.new(key, AES.MODE_CBC, iv)
-        decrypted = unpad(cipher.decrypt(raw_data), AES.block_size)
-        
-        return decrypted.decode('utf-8')
-    except:
+        decrypted = unpad(cipher.decrypt(encrypted_data), AES.block_size)
+
+        final_url = decrypted.decode("utf-8").strip()
+
+        if final_url.startswith("http"):
+            return final_url
+
         return None
 
+    except Exception as e:
+        print("Decrypt Hata:", e)
+        return None
+
+
 def get_palazzo_domain():
-    print("🔎 Palazzo için aktif domain aranıyor (27-200)...")
+    print("🔎 Palazzo aktif domain aranıyor...")
     base_pattern = "https://palazzocanli{}.com"
 
     def check(i):
         url = base_pattern.format(i)
         try:
-            r = requests.head(url, headers=HEADERS, timeout=3, verify=False)
-            if r.status_code == 200:
+            r = requests.get(url, headers=HEADERS, timeout=5, verify=False)
+            if (
+                r.status_code == 200
+                and (
+                    "player2.php" in r.text
+                    or "primaryStream" in r.text
+                    or "decryptUrl" in r.text
+                )
+            ):
                 return url
-        except: pass
+        except:
+            pass
         return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=50) as ex:
-        futures = [ex.submit(check, i) for i in range(27, 201)]
+        futures = [ex.submit(check, i) for i in range(1, 201)]
         for f in concurrent.futures.as_completed(futures):
             res = f.result()
             if res:
                 return res
+
     return None
 
+
 def get_palazzo_template(main_html):
-    m = re.search(r'"url":"(https?://[^"]+?id=)60[1-8][^"]*"', main_html)
-    if m:
-        url_template = m.group(1).replace('\\/', '/')
-        domain = re.search(r'https?://([^/]+)', url_template).group(1)
-        return url_template, f"https://{domain}/"
-    return None, None
+    patterns = [
+        r'"url":"(https?:\/\/[^"]+?player2\.php\?[^"]*?id=)',
+        r'(https:\/\/[^"\']+player2\.php\?[^"\']*?id=)',
+        r'(https:\/\/[^"\']+\/player\/player2\.php\?[^"\']*?id=)',
+        r'(https:\/\/[^"\']+\/embed\/player2\.php\?[^"\']*?id=)'
+    ]
+
+    for pat in patterns:
+        m = re.search(pat, main_html)
+        if m:
+            template = m.group(1)
+            template = template.replace('\\/', '/')
+            template = template.replace('&amp;', '&')
+            print("🎯 Player template bulundu:", template)
+            return template
+
+    return None
+
 
 def fetch_palazzo_channel(cid, player_template, active_site):
     try:
@@ -407,85 +488,101 @@ def fetch_palazzo_channel(cid, player_template, active_site):
 
         r = requests.get(full_url, headers=p_headers, timeout=10, verify=False)
         stream = decrypt_palazzo(r.text)
-        
-        # Tabii ve Tabiiy kanalları için birincil link bulunamazsa yedek URL yapısı
-        if not stream and ('tabii' in cid or 'tabiiy' in cid):
-             stream = f"https://trt-live.mncdn.com/trt1/master.m3u8"
-             
+
         return cid, stream
-    except:
-        if 'tabii' in cid or 'tabiiy' in cid:
-             return cid, f"https://trt-live.mncdn.com/trt1/master.m3u8"
+
+    except Exception as e:
+        print("FAIL:", cid, e)
         return cid, None
 
+
 def get_renconnect_content():
-    print("--- 6. RenConnect (Palazzo AES Decryptor) ---")
+    print("--- 6. Palazzo AES Bot ---")
 
     channels = [
-        ("601", "beIN Sports 1"), ("602", "beIN Sports 2"),
-        ("603", "beIN Sports 3"), ("604", "beIN Sports 4"),
-        ("605", "beIN Sports 5"), ("607", "S Sport 1"),
-        ("608", "S Sport 2"), ("609", "Smart Spor 1"),
+        ("601", "beIN Sports 1"),
+        ("602", "beIN Sports 2"),
+        ("603", "beIN Sports 3"),
+        ("604", "beIN Sports 4"),
+        ("605", "beIN Sports 5"),
+        ("607", "S Sport 1"),
+        ("608", "S Sport 2"),
+        ("609", "Smart Spor 1"),
         ("610", "Smart Spor 2"),
-        ("701", "Tivibu Spor 1"), ("702", "Tivibu Spor 2"),
-        ("703", "Tivibu Spor 3"), ("704", "Tivibu Spor 4"),
-        ("tabii", "Tabii Spor"), ("tabii1", "Tabii Spor 1"),
-        ("tabii2", "Tabii Spor 2"), ("tabii3", "Tabii Spor 3"),
-        ("tabii4", "Tabii Spor 4"), ("tabii5", "Tabii Spor 5"),
-        ("tabii6", "Tabii Spor 6"),
+        ("701", "Tivibu Spor 1"),
+        ("702", "Tivibu Spor 2"),
+        ("703", "Tivibu Spor 3"),
+        ("704", "Tivibu Spor 4"),
         ("beinsportshaber", "beIN Haber"),
-        ("eurosport1", "Euro Spor 1"),
-        ("eurosport2", "Euro Spor 2"),
+        ("eurosport1", "Eurosport 1"),
+        ("eurosport2", "Eurosport 2"),
     ]
 
-    results = []
+    results_map = {}
+
     active_site = get_palazzo_domain()
     if not active_site:
-        print("RenConnect: Site bulunamadı")
-        return results
+        print("❌ Palazzo: Site bulunamadı")
+        return []
 
-    print("RenConnect Domain:", active_site)
+    print("🌐 Palazzo Domain:", active_site)
+
     r = requests.get(active_site, headers=HEADERS, timeout=10, verify=False)
-    player_template, referer_domain = get_palazzo_template(r.text)
+    player_template = get_palazzo_template(r.text)
 
     if not player_template:
-        print("RenConnect: Template bulunamadı")
-        return results
-
-    print("RenConnect: Template bulundu")
+        print("❌ Palazzo: Template bulunamadı")
+        return []
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
-        futures = [ex.submit(fetch_palazzo_channel, cid, player_template, active_site) for cid, _ in channels]
+        futures = [
+            ex.submit(fetch_palazzo_channel, cid, player_template, active_site)
+            for cid, _ in channels
+        ]
 
         for f in concurrent.futures.as_completed(futures):
             cid, stream = f.result()
             name = next(n for c, n in channels if c == cid)
 
             if not stream:
-                print("FAIL:", name)
+                print("❌ FAIL:", name)
                 continue
 
-            print("OK:", name)
+            print("✅ OK:", name)
+
             entry = (
-                f'#EXTINF:-1 tvg-logo="{STATIC_LOGO}" group-title="RenConnect-Panel", {name}\n'
-                f'#EXTVLCOPT:http-referrer={referer_domain}\n'
+                f'#EXTINF:-1 '
+                f'tvg-logo="{STATIC_LOGO}" '
+                f'group-title="Palazzo",{name}\n'
+                f'#EXTVLCOPT:http-user-agent={HEADERS["User-Agent"]}\n'
+                f'#EXTVLCOPT:http-referrer={active_site}/\n'
+                f'#EXTVLCOPT:http-origin={active_site}\n'
                 f'{stream}'
             )
-            results.append(entry)
 
-    return results
+            results_map[cid] = entry
 
-# ============ YENİ PALAZZO BÖLÜMÜ SONU ============
+    # Sıralı çıktı
+    ordered_results = []
+    for cid, _ in channels:
+        if cid in results_map:
+            ordered_results.append(results_map[cid])
 
+    return ordered_results
+
+
+# ============================================
+# 7. BONUS TV (ZEUS)
+# ============================================
 
 def get_bonus_content():
     print("--- 7. Bonus TV (Zeus) ---")
     results = []
-    
+
     BASE_DOMAIN_PATTERN = "zeustv{}.vip"
     START_INDEX = 257
     END_INDEX = 500
-    
+
     CHANNELS = {
         'b1': 'beIN Spor 1', 'b1local': 'beIN Spor 1 YDK',
         'b2': 'beIN Spor 2', 'b3': 'beIN Spor 3',
@@ -517,8 +614,8 @@ def get_bonus_content():
             html_content = response.text
 
             patterns = [
-                r'atob\("([A-Za-z0-9+/=]+)"\)', 
-                r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"', 
+                r'atob\("([A-Za-z0-9+/=]+)"\)',
+                r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"',
                 r'src="([A-Za-z0-9+/=]+)"'
             ]
 
@@ -536,8 +633,10 @@ def get_bonus_content():
                     if not decoded_url.endswith('/'):
                         decoded_url += '/'
                     return decoded_url
-                except: pass
-        except: pass
+                except:
+                    pass
+        except:
+            pass
         return None
 
     active_url = None
@@ -549,13 +648,15 @@ def get_bonus_content():
                 active_url = result
                 executor.shutdown(wait=False, cancel_futures=True)
                 break
-                
-    if not active_url: return results
-        
+
+    if not active_url:
+        return results
+
     print(f"Bonus TV Domain: {active_url}")
-    
+
     base_video_url = get_base_url_from_page(active_url)
-    if not base_video_url: return results
+    if not base_video_url:
+        return results
 
     for channel_id, channel_name in CHANNELS.items():
         stream_url = f"{base_video_url}{channel_id}/index.m3u8"
@@ -564,32 +665,38 @@ def get_bonus_content():
 
     return results
 
+
+# ============================================
+# MAIN
+# ============================================
+
 def main():
-    print("DeaTHLesS-Bot v3.2 Started...")
-    
+    print("🔥 DeaTHLesS-Bot v3.3 Başladı")
+
     all_content = ["#EXTM3U"]
     all_content.extend(get_selcuk_content())
     all_content.extend(get_atom_content())
     all_content.extend(get_trgoals_content())
     all_content.extend(get_andro_content())
     all_content.extend(get_xsport_content())
-    all_content.extend(get_renconnect_content())  # Yeni AES Decryptor devrede
+    all_content.extend(get_renconnect_content())
     all_content.extend(get_bonus_content())
-    
+
     try:
         with open(OUTPUT_FILENAME, "w", encoding="utf-8") as f:
             f.write("\n".join(all_content))
-            
+
         full_path = os.path.abspath(OUTPUT_FILENAME)
         total_channels = len(all_content) - 1
-        
-        print("\nCompleted!")
-        print(f"File: {OUTPUT_FILENAME}")
-        print(f"Channels: {total_channels}")
-        print(f"Path: {full_path}")
-        
+
+        print("\n✅ Tamamlandı!")
+        print(f"📄 Dosya: {OUTPUT_FILENAME}")
+        print(f"📺 Kanal Sayısı: {total_channels}")
+        print(f"📂 Konum: {full_path}")
+
     except IOError as e:
-        print(f"\nError: {e}")
+        print(f"\n❌ Hata: {e}")
+
 
 if __name__ == "__main__":
     main()
