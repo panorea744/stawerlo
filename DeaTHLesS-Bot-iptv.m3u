@@ -293,13 +293,13 @@ https://dga1op10s1u3leo.33a6243d11525c.click/live/xtabiispor6/playlist.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="XSport-Panel", TABIISPOR7
 #EXTVLCOPT:http-referer=https://www.xsportv57.xyz/
 https://dga1op10s1u3leo.33a6243d11525c.click/live/xtabiispor7/playlist.m3u8
-#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 3
-#EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
-https://trt-live.mncdn.com/trt1/master.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 2
 #EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
 https://trt-live.mncdn.com/trt1/master.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 6
+#EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
+https://trt-live.mncdn.com/trt1/master.m3u8
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 3
 #EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
 https://trt-live.mncdn.com/trt1/master.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 4
@@ -308,9 +308,9 @@ https://trt-live.mncdn.com/trt1/master.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor
 #EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
 https://trt-live.mncdn.com/trt1/master.m3u8
-#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 1
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 5
 #EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
 https://trt-live.mncdn.com/trt1/master.m3u8
-#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 5
+#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="RenConnect-Panel", Tabii Spor 1
 #EXTVLCOPT:http-referrer=https://bc4liveiframecdn.shop/
 https://trt-live.mncdn.com/trt1/master.m3u8
