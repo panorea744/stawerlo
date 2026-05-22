@@ -553,7 +553,7 @@ def get_renconnect_content():
             entry = (
                 f'#EXTINF:-1 '
                 f'tvg-logo="{STATIC_LOGO}" '
-                f'group-title="Palazzo",{name}\n'
+                f'group-title="RenConnect-Panel",{name}\n'
                 f'#EXTVLCOPT:http-user-agent={HEADERS["User-Agent"]}\n'
                 f'#EXTVLCOPT:http-referrer={active_site}/\n'
                 f'#EXTVLCOPT:http-origin={active_site}\n'
