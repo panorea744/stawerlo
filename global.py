@@ -6,6 +6,7 @@ import os
 import concurrent.futures
 import base64
 import json
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
@@ -479,12 +480,13 @@ def get_palazzo_template(main_html):
     return None
 
 
-def fetch_palazzo_channel(cid, player_template, active_site):
+def fetch_palazzo_channel(cid, player_template, player_domain):
     try:
         full_url = f"{player_template}{cid}"
         p_headers = HEADERS.copy()
-        p_headers["Referer"] = active_site + "/"
-        p_headers["Origin"] = active_site
+        # İsteği atarken referer ve origin'i player_domain olarak değiştiriyoruz.
+        p_headers["Referer"] = player_domain + "/"
+        p_headers["Origin"] = player_domain
 
         r = requests.get(full_url, headers=p_headers, timeout=10, verify=False)
         stream = decrypt_palazzo(r.text)
@@ -534,9 +536,14 @@ def get_renconnect_content():
         print("❌ Palazzo: Template bulunamadı")
         return []
 
+    # Şablon URL'sinden Player Domainini Ayrıştırıyoruz
+    parsed_uri = urlparse(player_template)
+    player_domain = f"{parsed_uri.scheme}://{parsed_uri.netloc}"
+    print(f"🔑 Player Domain (Referer İçin): {player_domain}")
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
         futures = [
-            ex.submit(fetch_palazzo_channel, cid, player_template, active_site)
+            ex.submit(fetch_palazzo_channel, cid, player_template, player_domain)
             for cid, _ in channels
         ]
 
@@ -555,8 +562,8 @@ def get_renconnect_content():
                 f'tvg-logo="{STATIC_LOGO}" '
                 f'group-title="RenConnect-Panel",{name}\n'
                 f'#EXTVLCOPT:http-user-agent={HEADERS["User-Agent"]}\n'
-                f'#EXTVLCOPT:http-referrer={active_site}/\n'
-                f'#EXTVLCOPT:http-origin={active_site}\n'
+                f'#EXTVLCOPT:http-referrer={player_domain}/\n'
+                f'#EXTVLCOPT:http-origin={player_domain}\n'
                 f'{stream}'
             )
 
