@@ -450,7 +450,7 @@ def get_palazzo_domain():
         return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=50) as ex:
-        futures = [ex.submit(check, i) for i in range(1, 201)]
+        futures = [ex.submit(check, i) for i in range(28, 201)]
         for f in concurrent.futures.as_completed(futures):
             res = f.result()
             if res:
