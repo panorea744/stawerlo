@@ -480,13 +480,14 @@ def get_palazzo_template(main_html):
     return None
 
 
-def fetch_palazzo_channel(cid, player_template, player_domain):
+def fetch_palazzo_channel(cid, player_template, active_site):
     try:
         full_url = f"{player_template}{cid}"
         p_headers = HEADERS.copy()
-        # İsteği atarken referer ve origin'i player_domain olarak değiştiriyoruz.
-        p_headers["Referer"] = player_domain + "/"
-        p_headers["Origin"] = player_domain
+        
+        # PLAYERA BAĞLANIRKEN PALAZZO'NUN GÜNCEL DOMAINİ (active_site) REFERER/ORIGIN KULLANILIYOR
+        p_headers["Referer"] = active_site + "/"
+        p_headers["Origin"] = active_site
 
         r = requests.get(full_url, headers=p_headers, timeout=10, verify=False)
         stream = decrypt_palazzo(r.text)
@@ -536,14 +537,15 @@ def get_renconnect_content():
         print("❌ Palazzo: Template bulunamadı")
         return []
 
-    # Şablon URL'sinden Player Domainini Ayrıştırıyoruz
+    # PLAYER LİNKİNİN DOMAINİNİ AYIR (M3U ÇIKTISINDA YAYINI OYNATMAK İÇİN REF OLARAK KULLANILACAK)
     parsed_uri = urlparse(player_template)
     player_domain = f"{parsed_uri.scheme}://{parsed_uri.netloc}"
-    print(f"🔑 Player Domain (Referer İçin): {player_domain}")
+    print(f"🔑 M3U Player Ref Domaini: {player_domain}")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
         futures = [
-            ex.submit(fetch_palazzo_channel, cid, player_template, player_domain)
+            # Yayın çekilirken active_site kullanılıyor
+            ex.submit(fetch_palazzo_channel, cid, player_template, active_site)
             for cid, _ in channels
         ]
 
@@ -557,6 +559,7 @@ def get_renconnect_content():
 
             print("✅ OK:", name)
 
+            # M3U ÇIKTISINDA O PLAYER LİNKİ (player_domain) REF ORIGIN OLUYOR
             entry = (
                 f'#EXTINF:-1 '
                 f'tvg-logo="{STATIC_LOGO}" '
