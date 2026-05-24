@@ -82,7 +82,7 @@ def create_m3u8_files(base_video_url, github_folder):
 """
     created_files = 0
     for channel_id in CHANNEL_IDS:
-        stream_url = f"{base_video_url}{channel_id}/index.txt"
+        stream_url = f"{base_video_url}{channel_id}/index.m3u8"
         filename = os.path.join(github_folder, f"{channel_id}.m3u8")
 
         try:
@@ -100,7 +100,7 @@ def create_master_m3u(base_video_url):
         with open(MASTER_M3U_FILENAME, 'w', encoding='utf-8') as f:
             f.write("#EXTM3U\n")
             for channel_id in CHANNEL_IDS:
-                stream_url = f"{base_video_url}{channel_id}/index.txt"
+                stream_url = f"{base_video_url}{channel_id}/index.m3u8"
                 channel_name = channel_id.upper()
                 f.write(f'#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="DeaTHLesS", {channel_name}\n')
                 f.write(f'{stream_url}\n')
