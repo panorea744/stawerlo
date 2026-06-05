@@ -38,7 +38,7 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git add DeaTHLesS-Bot-iptv.m3u
+          git add DeaTHLesS-Botiptv.m3u
           git commit -m "Auto-update IPTV playlist" || echo "No changes to commit"
 
       - name: Pull and Push
