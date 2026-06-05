@@ -20,7 +20,7 @@ HEADERS = {
 }
 TIMEOUT_VAL = 15
 PROXY_URL = "https://seep.eu.org/"
-OUTPUT_FILENAME = "DeaTHLesS-Bot-iptv.m3u"
+OUTPUT_FILENAME = "DeaTHLesS-Botiptv.m3u"
 STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
 
 # ============================================
