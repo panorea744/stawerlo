@@ -7,7 +7,7 @@ BASE_DOMAIN_PATTERN = "zeustv{}.vip"
 START_INDEX = 262
 END_INDEX = 500
 REQUEST_TIMEOUT = 5  
-GITHUB_FOLDER_NAME = "teyzeniyerim"
+GITHUB_FOLDER_NAME = "teyzeniyerim1"
 MASTER_M3U_FILENAME = "ventino.m3u" 
 
 CHANNEL_IDS = [
