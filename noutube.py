@@ -10,8 +10,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 ENCRYPTED_URL = "aHR0cHM6Ly95dHViZS13YXJzLm15d2lyZS5vcmcvbm91dHViZS9wbGF5bGlzdC5tM3U="
 
 def create_noutube_folder():
-    if not os.path.exists("noutube"):
-        os.makedirs("noutube")
+    if not os.path.exists("noutube1"):
+        os.makedirs("noutube1")
 
 def decrypt_url():
     decrypted_bytes = base64.b64decode(ENCRYPTED_URL)
@@ -37,7 +37,7 @@ def parse_playlist(content):
 
 def save_channel_as_m3u8(channel_name, stream_url):
     safe_name = "".join(c for c in channel_name if c.isalnum() or c in ".-_").rstrip()
-    filename = f"noutube/{safe_name}.m3u8"
+    filename = f"noutube1/{safe_name}.m3u8"
     content = f"""#EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:BANDWIDTH=1280000,RESOLUTION=1280x720
