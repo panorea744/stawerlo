@@ -36,7 +36,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           
           # Yeni veya değişen dosyaları ekle
-          git add teyzeniyerim/
+          git add teyzeniyerim1/
           git add ventino.m3u
           
           # Eğer dosyalarda bir değişiklik varsa commit ve push yap
