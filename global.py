@@ -544,7 +544,6 @@ def get_renconnect_content():
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as ex:
         futures = [
-            # Yayın çekilirken active_site kullanılıyor
             ex.submit(fetch_palazzo_channel, cid, player_template, active_site)
             for cid, _ in channels
         ]
@@ -559,7 +558,6 @@ def get_renconnect_content():
 
             print("✅ OK:", name)
 
-            # M3U ÇIKTISINDA O PLAYER LİNKİ (player_domain) REF ORIGIN OLUYOR
             entry = (
                 f'#EXTINF:-1 '
                 f'tvg-logo="{STATIC_LOGO}" '
@@ -572,7 +570,6 @@ def get_renconnect_content():
 
             results_map[cid] = entry
 
-    # Sıralı çıktı
     ordered_results = []
     for cid, _ in channels:
         if cid in results_map:
@@ -582,7 +579,7 @@ def get_renconnect_content():
 
 
 # ============================================
-# 7. BONUS TV (ZEUS)
+# 7. BONUS TV (ZEUS) - GÜNCELLENMİŞ VERSİYON
 # ============================================
 
 def get_bonus_content():
@@ -596,14 +593,17 @@ def get_bonus_content():
     CHANNELS = {
         'b1': 'beIN Spor 1', 'b1local': 'beIN Spor 1 YDK',
         'b2': 'beIN Spor 2', 'b3': 'beIN Spor 3',
-        'b4': 'beIN Spor 4', 'b5': 'beIN Spor 5',
+        'b4': 'beIN Spor 4', 'bein5': 'beIN Spor 5',
         'b1max': 'beIN Max 1', 'b2max': 'beIN Max 2',
         's1': 'S Spor 1', 's2': 'S Spor 2',
         'smart1': 'Smart Spor 1', 'smart2': 'Smart Spor 2',
         'tivibu': 'Tivibu Spor', 'tivibu1': 'Tivibu Spor 1',
         'tivibu2': 'Tivibu Spor 2', 'tivibu3': 'Tivibu Spor 3',
-        'euro1': 'Euro Spor 1', 'euro2': 'Euro Spor 2',
-        'sifirtv': 'Sıfırtv'
+        'sifirtv': 'Sıfırtv', 'euro1': 'Euro Spor 1', 'euro2': 'Euro Spor 2',
+        'tabiiyedek': 'Tabii Spor YDK', 'tabii1': 'Tabii Spor 1',
+        'tabii2': 'Tabii Spor 2', 'tabii3': 'Tabii Spor 3',
+        'tabii4': 'Tabii Spor 4', 'tabii5': 'Tabii Spor 5',
+        'tabii6': 'Tabii Spor 6', 'xexxen': 'Exxen', 'xexxen1': 'Exxen 1'
     }
 
     def check_site(index):
@@ -623,28 +623,13 @@ def get_bonus_content():
             response.raise_for_status()
             html_content = response.text
 
-            patterns = [
-                r'atob\("([A-Za-z0-9+/=]+)"\)',
-                r'var\s+\w+\s*=\s*"([A-Za-z0-9+/=]+)"',
-                r'src="([A-Za-z0-9+/=]+)"'
-            ]
-
-            base64_string = None
-            for pattern in patterns:
-                match = re.search(pattern, html_content)
-                if match:
-                    base64_string = match.group(1)
-                    break
-
-            if base64_string:
-                try:
-                    decoded_bytes = base64.b64decode(base64_string)
-                    decoded_url = decoded_bytes.decode('utf-8')
-                    if not decoded_url.endswith('/'):
-                        decoded_url += '/'
-                    return decoded_url
-                except:
-                    pass
+            # Yeni sistemdeki çekme mantığı
+            match = re.search(r'var\s+streamUrl\s*=\s*["\']([^"\']+)["\']', html_content)
+            if match:
+                base_video_url = match.group(1)
+                if not base_video_url.endswith('/'):
+                    base_video_url += '/'
+                return base_video_url
         except:
             pass
         return None
@@ -660,13 +645,17 @@ def get_bonus_content():
                 break
 
     if not active_url:
+        print("❌ Zeus TV: Aktif domain bulunamadı.")
         return results
 
-    print(f"Bonus TV Domain: {active_url}")
+    print(f"✅ Zeus TV Domain: {active_url}")
 
     base_video_url = get_base_url_from_page(active_url)
     if not base_video_url:
+        print("❌ Zeus TV: Video URL bulunamadı.")
         return results
+        
+    print(f"✅ Zeus TV Çözülen URL: {base_video_url}")
 
     for channel_id, channel_name in CHANNELS.items():
         stream_url = f"{base_video_url}{channel_id}/index.m3u8"
