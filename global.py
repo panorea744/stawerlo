@@ -187,24 +187,24 @@ def get_atom_content():
 # ============================================
 
 TRGOALS_STATIC_LIST = [
-    ("TRGoals Ana", "https://spring-band-25c2.panorea1000.workers.dev/trgoals.m3u8"),
-    ("beIN Sports 1 (Zirve)", "https://spring-band-25c2.panorea1000.workers.dev/zirve.m3u8"),
-    ("beIN Sports 2", "https://spring-band-25c2.panorea1000.workers.dev/b2.m3u8"),
-    ("beIN Sports 3", "https://spring-band-25c2.panorea1000.workers.dev/b3.m3u8"),
-    ("beIN Sports 4", "https://spring-band-25c2.panorea1000.workers.dev/b4.m3u8"),
-    ("beIN Sports 5", "https://spring-band-25c2.panorea1000.workers.dev/b5.m3u8"),
-    ("beIN Sports Max 1", "https://spring-band-25c2.panorea1000.workers.dev/bm1.m3u8"),
-    ("beIN Sports Max 2", "https://spring-band-25c2.panorea1000.workers.dev/bm2.m3u8"),
-    ("S Sport 1", "https://spring-band-25c2.panorea1000.workers.dev/ss.m3u8"),
-    ("S Sport 2", "https://spring-band-25c2.panorea1000.workers.dev/ss2.m3u8"),
-    ("Smart Spor 1", "https://spring-band-25c2.panorea1000.workers.dev/smarts.m3u8"),
-    ("Smart Spor 2", "https://spring-band-25c2.panorea1000.workers.dev/sms2.m3u8"),
-    ("Tivibu Spor 1", "https://spring-band-25c2.panorea1000.workers.dev/t1.m3u8"),
-    ("Tivibu Spor 2", "https://spring-band-25c2.panorea1000.workers.dev/t2.m3u8"),
-    ("Tivibu Spor 3", "https://spring-band-25c2.panorea1000.workers.dev/t3.m3u8"),
-    ("Tivibu Spor 4", "https://spring-band-25c2.panorea1000.workers.dev/t4.m3u8"),
-    ("Eurosport 1", "https://spring-band-25c2.panorea1000.workers.dev/eu1.m3u8"),
-    ("Eurosport 2", "https://spring-band-25c2.panorea1000.workers.dev/eu2.m3u8")
+    ("TRGoals Ana", "https://deathless.pantonum1.workers.dev/taraftarium.m3u8"),
+    ("beIN Sports 1 (Zirve)", "https://deathless.pantonum1.workers.dev/patron.m3u8"),
+    ("beIN Sports 2", "https://deathless.pantonum1.workers.dev/b2.m3u8"),
+    ("beIN Sports 3", "https://deathless.pantonum1.workers.dev/b3.m3u8"),
+    ("beIN Sports 4", "https://deathless.pantonum1.workers.dev/b4.m3u8"),
+    ("beIN Sports 5", "https://deathless.pantonum1.workers.dev/b5.m3u8"),
+    ("beIN Sports Max 1", "https://deathless.pantonum1.workers.dev/bm1.m3u8"),
+    ("beIN Sports Max 2", "https://deathless.pantonum1.workers.dev/bm2.m3u8"),
+    ("S Sport 1", "https://deathless.pantonum1.workers.dev/ss.m3u8"),
+    ("S Sport 2", "https://deathless.pantonum1.workers.dev/ss2.m3u8"),
+    ("Smart Spor 1", "https://deathless.pantonum1.workers.dev/smarts.m3u8"),
+    ("Smart Spor 2", "https://deathless.pantonum1.workers.dev/sms2.m3u8"),
+    ("Tivibu Spor 1", "https://deathless.pantonum1.workers.dev/t1.m3u8"),
+    ("Tivibu Spor 2", "https://deathless.pantonum1.workers.dev/t2.m3u8"),
+    ("Tivibu Spor 3", "https://deathless.pantonum1.workers.dev/t3.m3u8"),
+    ("Tivibu Spor 4", "https://deathless.pantonum1.workers.dev/t4.m3u8"),
+    ("Eurosport 1", "https://deathless.pantonum1.workers.dev/eu1.m3u8"),
+    ("Eurosport 2", "https://deathless.pantonum1.workers.dev/eu2.m3u8")
 ]
 
 def get_trgoals_content():
