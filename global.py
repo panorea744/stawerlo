@@ -590,7 +590,7 @@ def get_bonus_content():
     results = []
 
     BASE_DOMAIN_PATTERN = "zeustv{}.vip"
-    START_INDEX = 257
+    START_INDEX = 262
     END_INDEX = 500
 
     CHANNELS = {
