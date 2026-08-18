@@ -1,8 +1,6 @@
 #EXTM3U
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 1
- https://corestream.siteyaptim.live//beintv/tracks-v1a1/mono.m3u8
-#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 2
- https://corestream.siteyaptim.live//trt-spor/tracks-v1a1/mono.m3u8
+https://corestream.siteyaptim.live/hls/trt1.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 3
  https://corestream.siteyaptim.live//bein3/tracks-v1a1/mono.m3u8
 #EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="Atom-Panel", beIN Sports 4
