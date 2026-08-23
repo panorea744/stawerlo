@@ -500,7 +500,7 @@ def fetch_palazzo_channel(cid, player_template, active_site):
 
 
 def get_renconnect_content():
-    print("--- 6. Palazzo AES Bot ---")
+    print("--- 6. Palazzo AES Bot (Renconnect) ---")
 
     channels = [
         ("601", "beIN Sports 1"),
@@ -522,19 +522,47 @@ def get_renconnect_content():
     ]
 
     results_map = {}
+    ordered_results = []
+    old_links = []
+
+    # Eski linkleri korumak için mevcut dosyadan okuma işlemi
+    if os.path.exists(OUTPUT_FILENAME):
+        try:
+            with open(OUTPUT_FILENAME, 'r', encoding='utf-8') as f:
+                content = f.read()
+            # Dosyayı #EXTINF bloklarına böl ve sadece renconnect olanları ayıkla
+            blocks = content.split('#EXTINF:')
+            for block in blocks[1:]:
+                if 'group-title="renconnect"' in block:
+                    old_links.append('#EXTINF:' + block.strip())
+        except Exception as e:
+            print(f"Eski linkleri okuma hatasi: {e}")
 
     active_site = get_palazzo_domain()
+    
+    # HATA KONTROL 1: Site Bulunamazsa
     if not active_site:
         print("❌ Palazzo: Site bulunamadı")
+        if old_links:
+            print("⚠️ Mevcut (Eski) renconnect linkleri korunuyor...")
+            return old_links
         return []
 
     print("🌐 Palazzo Domain:", active_site)
 
-    r = requests.get(active_site, headers=HEADERS, timeout=10, verify=False)
-    player_template = get_palazzo_template(r.text)
+    try:
+        r = requests.get(active_site, headers=HEADERS, timeout=10, verify=False)
+        player_template = get_palazzo_template(r.text)
+    except Exception as e:
+        player_template = None
+        print(f"Palazzo HTML Okuma Hatası: {e}")
 
+    # HATA KONTROL 2: Şablon Çözülemezse
     if not player_template:
         print("❌ Palazzo: Template bulunamadı")
+        if old_links:
+            print("⚠️ Mevcut (Eski) renconnect linkleri korunuyor...")
+            return old_links
         return []
 
     # PLAYER LİNKİNİN DOMAINİNİ AYIR (M3U ÇIKTISINDA YAYINI OYNATMAK İÇİN REF OLARAK KULLANILACAK)
@@ -570,10 +598,16 @@ def get_renconnect_content():
 
             results_map[cid] = entry
 
-    ordered_results = []
     for cid, _ in channels:
         if cid in results_map:
             ordered_results.append(results_map[cid])
+
+    # HATA KONTROL 3: Şifreler çözülemez ve 0 kanal çekilirse
+    if not ordered_results:
+        print("❌ Palazzo: Hiçbir kanal çekilemedi.")
+        if old_links:
+            print("⚠️ Mevcut (Eski) renconnect linkleri korunuyor...")
+            return old_links
 
     return ordered_results
 
