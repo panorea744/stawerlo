@@ -8,8 +8,9 @@ on:
 jobs:
   update-m3u:
     runs-on: ubuntu-latest
+
     permissions:
-      contents: write 
+      contents: write
 
     steps:
       - name: Repoyu Klonla
@@ -20,11 +21,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Gerekli Kütüphaneleri Yükle
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests urllib3 cloudscraper
-
       - name: Botu Çalıştır
         run: python zeus_bot.py
 
@@ -32,9 +28,12 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
+
           git add teyzeniyerim1/
-          git add ventino.m3u
-          
-          git diff-index --quiet HEAD || git commit -m "🤖 Otomatik Güncelleme: Kanallar Yenilendi"
-          git push
+
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "🤖 Otomatik Güncelleme: index.txt güncellendi"
+            git push
+          fi
