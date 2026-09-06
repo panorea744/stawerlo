@@ -6,7 +6,7 @@ import os
 BASE_DOMAIN_PATTERN = "zeustv{}.cfd"
 START_INDEX = 269
 END_INDEX = 500
-REQUEST_TIMEOUT = 5  
+REQUEST_TIMEOUT = 10  # GitHub Actions ağ gecikmelerine karşı 5'ten 10'a çıkarıldı
 GITHUB_FOLDER_NAME = "teyzeniyerim1"
 MASTER_M3U_FILENAME = "ventino.m3u" 
 
@@ -17,9 +17,18 @@ CHANNEL_IDS = [
     'tabii4', 'tabii5', 'tabii6', 'xexxen', 'xexxen1'
 ]
 
+# BOT ENGELİNİ AŞMAK İÇİN SAHTE TARAYICI KİMLİĞİ (ÇOK ÖNEMLİ)
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Connection": "keep-alive"
+}
+
 def find_working_domain_and_url():
     print(f"🔍 {BASE_DOMAIN_PATTERN.format(START_INDEX)} ile {BASE_DOMAIN_PATTERN.format(END_INDEX)} arasında aktif domain taranıyor...")
-    print("⚡ Tarama ana sayfa yerine doğrudan ch.html?id=b1 üzerinden yapılıyor (Doğrulama bypass).")
+    print("⚡ Tarama ana sayfa yerine doğrudan ch.html?id=b1 üzerinden yapılıyor.")
+    print("🛡️ Bot engeli aşmak için sahte tarayıcı (Chrome) kimliği kullanılıyor...\n")
     
     for i in range(START_INDEX, END_INDEX + 1):
         domain = BASE_DOMAIN_PATTERN.format(i)
@@ -27,9 +36,11 @@ def find_working_domain_and_url():
         page_url = f"https://{domain}/ch.html?id=b1"
         
         try:
-            response = requests.get(page_url, timeout=REQUEST_TIMEOUT, allow_redirects=True)
+            # HEADERS parametresini ekleyerek sitenin bizi engellemesini önlüyoruz
+            response = requests.get(page_url, headers=HEADERS, timeout=REQUEST_TIMEOUT, allow_redirects=True)
+            
             if response.status_code == 200:
-                print(f"\n✅ Aktif sayfa bulundu: {page_url}")
+                print(f"✅ Aktif sayfa bulundu: {page_url}")
                 
                 # Sayfa kaynağında streamUrl arıyoruz
                 html_content = response.text
@@ -43,6 +54,10 @@ def find_working_domain_and_url():
                     return f"https://{domain}", base_video_url
                 else:
                     print("    ⚠️ Sayfa aktif ama 'streamUrl' kodu bulunamadı. Sonraki domaine geçiliyor...")
+            elif response.status_code in [403, 401]:
+                # İlk denemede eğer WAF veya Cloudflare engellerse loglarda görmek için:
+                if i == START_INDEX:
+                    print(f"    [!] {domain} için {response.status_code} hatası alındı (GitHub IP'si engelleniyor olabilir).")
             
         except requests.ConnectionError:
             pass
@@ -51,7 +66,7 @@ def find_working_domain_and_url():
         except Exception:
             pass
 
-    print("❌ Gerekli kodu içeren hiçbir aktif domain bulunamadı.")
+    print("\n❌ Gerekli kodu içeren hiçbir aktif domain bulunamadı.")
     return None, None
 
 def create_m3u8_files(base_video_url, github_folder):
@@ -65,10 +80,10 @@ def create_m3u8_files(base_video_url, github_folder):
 """
     created_files = 0
     for channel_id in CHANNEL_IDS:
-        # DİKKAT: index.m3u8 yerine index.txt eklendi
+        # DİKKAT: m3u8 yerine txt uzantısı ekleniyor
         stream_url = f"{base_video_url}{channel_id}/index.txt"
         
-        # Yerel dosya adı yine .m3u8 kalıyor (oynatıcıların tanıması için)
+        # Oluşturulacak dosya adı yine .m3u8 kalıyor
         filename = os.path.join(github_folder, f"{channel_id}.m3u8")
 
         try:
@@ -86,7 +101,7 @@ def create_master_m3u(base_video_url):
         with open(MASTER_M3U_FILENAME, 'w', encoding='utf-8') as f:
             f.write("#EXTM3U\n")
             for channel_id in CHANNEL_IDS:
-                # DİKKAT: index.m3u8 yerine index.txt eklendi
+                # DİKKAT: m3u8 yerine txt uzantısı ekleniyor
                 stream_url = f"{base_video_url}{channel_id}/index.txt"
                 channel_name = channel_id.upper()
                 
