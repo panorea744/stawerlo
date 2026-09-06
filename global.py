@@ -28,7 +28,7 @@ STATIC_LOGO = "https://i.hizliresim.com/8xzjgqv.jpg"
 # ============================================
 
 SELCUK_NAMES = {
-    "sbeinsports-1": "beIN Sports 1", "selcukobs1": "beIN Sports 1", "selcukbeinsports1": "beIN Sports 1",
+    "sbeinsports-1": "beIN Sports 1", "selcukobs1": "beIN Sports 1 (Alternatif 2)", "selcukbeinsports1": "beIN Sports 1 (Alternatif 3)",
     "selcukbeinsports2": "beIN Sports 2", "selcukbeinsports3": "beIN Sports 3",
     "selcukbeinsports4": "beIN Sports 4", "selcukbeinsports5": "beIN Sports 5",
     "selcukbeinsportsmax1": "beIN Sports Max 1", "selcukbeinsportsmax2": "beIN Sports Max 2",
