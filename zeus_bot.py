@@ -17,50 +17,33 @@ CHANNEL_IDS = [
     'tabii4', 'tabii5', 'tabii6', 'xexxen', 'xexxen1'
 ]
 
-def get_base_url_from_page(active_domain, channel_id='b1'):
-    page_url = f"{active_domain}/ch.html?id={channel_id}"
-    print(f"  📄 Sayfa kaynağı inceleniyor: {page_url}")
-    try:
-        response = requests.get(page_url, timeout=10)
-        response.raise_for_status()
-        html_content = response.text
-
-        match = re.search(r'var\s+streamUrl\s*=\s*["\']([^"\']+)["\']', html_content)
-
-        if match:
-            base_video_url = match.group(1)
-            if not base_video_url.endswith('/'):
-                base_video_url += '/'
-            print(f"    ✅ Çözülen URL: {base_video_url}")
-            return base_video_url
-        else:
-            print("    ❌ Sayfa kaynağında URL bulunamadı.")
-            return None
-
-    except requests.exceptions.RequestException as e:
-        print(f"    ❌ Sayfaya erişilemedi: {e}")
-        return None
-
 def find_working_domain_and_url():
     print(f"🔍 {BASE_DOMAIN_PATTERN.format(START_INDEX)} ile {BASE_DOMAIN_PATTERN.format(END_INDEX)} arasında aktif domain taranıyor...")
+    print("⚡ Tarama ana sayfa yerine doğrudan ch.html?id=b1 üzerinden yapılıyor (Doğrulama bypass).")
     
     for i in range(START_INDEX, END_INDEX + 1):
         domain = BASE_DOMAIN_PATTERN.format(i)
-        url = f"https://{domain}"
+        # Direkt ch.html sayfasına gidiyoruz
+        page_url = f"https://{domain}/ch.html?id=b1"
         
         try:
-            response = requests.get(url + "/", timeout=REQUEST_TIMEOUT, allow_redirects=True)
+            response = requests.get(page_url, timeout=REQUEST_TIMEOUT, allow_redirects=True)
             if response.status_code == 200:
-                print(f"\n✅ Aktif domain bulundu: {url}")
-                base_video_url = get_base_url_from_page(url, 'b1')
+                print(f"\n✅ Aktif sayfa bulundu: {page_url}")
                 
-                if base_video_url:
-                    return url, base_video_url
+                # Sayfa kaynağında streamUrl arıyoruz
+                html_content = response.text
+                match = re.search(r'var\s+streamUrl\s*=\s*["\']([^"\']+)["\']', html_content)
+
+                if match:
+                    base_video_url = match.group(1)
+                    if not base_video_url.endswith('/'):
+                        base_video_url += '/'
+                    print(f"    ✅ Çözülen Base URL: {base_video_url}")
+                    return f"https://{domain}", base_video_url
                 else:
-                    print(f"  ⚠️ Domain aktif ama aranan kod yok! Bir sonraki domaine geçiliyor...\n")
-            else:
-                pass 
-                
+                    print("    ⚠️ Sayfa aktif ama 'streamUrl' kodu bulunamadı. Sonraki domaine geçiliyor...")
+            
         except requests.ConnectionError:
             pass
         except requests.Timeout:
@@ -72,7 +55,7 @@ def find_working_domain_and_url():
     return None, None
 
 def create_m3u8_files(base_video_url, github_folder):
-    print(f"\n📁 '{github_folder}' klasöründe .m3u8 dosyaları oluşturuluyor...")
+    print(f"\n📁 '{github_folder}' klasöründe dosyalar oluşturuluyor...")
     os.makedirs(github_folder, exist_ok=True)
 
     m3u8_template = """#EXTM3U
@@ -82,7 +65,10 @@ def create_m3u8_files(base_video_url, github_folder):
 """
     created_files = 0
     for channel_id in CHANNEL_IDS:
-        stream_url = f"{base_video_url}{channel_id}/index.m3u8"
+        # DİKKAT: index.m3u8 yerine index.txt eklendi
+        stream_url = f"{base_video_url}{channel_id}/index.txt"
+        
+        # Yerel dosya adı yine .m3u8 kalıyor (oynatıcıların tanıması için)
         filename = os.path.join(github_folder, f"{channel_id}.m3u8")
 
         try:
@@ -100,8 +86,10 @@ def create_master_m3u(base_video_url):
         with open(MASTER_M3U_FILENAME, 'w', encoding='utf-8') as f:
             f.write("#EXTM3U\n")
             for channel_id in CHANNEL_IDS:
-                stream_url = f"{base_video_url}{channel_id}/index.m3u8"
+                # DİKKAT: index.m3u8 yerine index.txt eklendi
+                stream_url = f"{base_video_url}{channel_id}/index.txt"
                 channel_name = channel_id.upper()
+                
                 f.write(f'#EXTINF:-1 tvg-logo="https://i.hizliresim.com/8xzjgqv.jpg" group-title="DeaTHLesS", {channel_name}\n')
                 f.write(f'{stream_url}\n')
                 
@@ -110,7 +98,7 @@ def create_master_m3u(base_video_url):
         print(f"  ❌ {MASTER_M3U_FILENAME} oluşturulurken hata oluştu: {e}")
 
 def main():
-    print("🤖 Zeus TV M3U8 Botu Başlıyor...\n")
+    print("🤖 Zeus TV Botu Başlıyor...\n")
 
     active_domain, base_video_url = find_working_domain_and_url()
     
